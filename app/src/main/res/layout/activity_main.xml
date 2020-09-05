@@ -22,7 +22,7 @@
         android:layout_above="@id/nav_view"
         android:id="@+id/nav_division"
         android:orientation="horizontal" />
-    
+
     <FrameLayout
         android:id="@+id/main_content"
         android:name="androidx.navigation.fragment.NavHostFragment"
