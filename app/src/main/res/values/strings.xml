@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RandomFood</string>
+    <string name="title_foods">Foods</string>
+    <string name="title_combination">Combination</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_settings">Settings</string>
+</resources>
