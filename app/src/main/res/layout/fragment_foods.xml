@@ -9,15 +9,84 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:id="@+id/checkbox_container"
+        android:gravity="center">
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:layout_width="50dp"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:id="@+id/allfood_checkbox" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/checkbox_all" />
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:layout_width="30dp"
             android:layout_height="50dp"
             android:id="@+id/koreanfood_checkbox" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/checkbox_all" />
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/checkbox_korean" />
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:id="@+id/chinesefood_checkbox" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/checkbox_chinese" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:id="@+id/japanesefood_checkbox" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/checkbox_japanese" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:id="@+id/westernfood_checkbox" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/checkbox_western" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:id="@+id/otherfood_checkbox" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/checkbox_others" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        android:id="@+id/checkbox_division"
+        android:background="@color/colorDivision"
+        android:layout_below="@+id/checkbox_container"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/checkbox_division"
+        android:id="@+id/foods_recyclerview" />
 </RelativeLayout>
