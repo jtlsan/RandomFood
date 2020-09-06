@@ -1,7 +1,17 @@
 <resources>
     <string name="app_name">RandomFood</string>
+
+    <!--Title names for bottom navigation-->
     <string name="title_foods">Foods</string>
     <string name="title_combination">Combination</string>
     <string name="title_favorites">Favorites</string>
     <string name="title_settings">Settings</string>
+
+    <!--Food names for fragment_foods-->
+    <string name="checkbox_korean">한식</string>
+    <string name="checkbox_chinese">중식</string>
+    <string name="checkbox_japanese">일식</string>
+    <string name="checkbox_western">양식</string>
+    <string name="checkbox_all">모두</string>
+    <string name="checkbox_others">그외</string>
 </resources>
