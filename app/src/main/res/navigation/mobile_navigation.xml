@@ -7,24 +7,24 @@
 
     <fragment
         android:id="@+id/navigation_foods"
-        android:name="com.mountain96.random.ui.home.HomeFragment"
+        android:name="com.mountain96.random.ui.favorites.FavoritesFragment"
         android:label="@string/title_foods"
         tools:layout="@layout/fragment_foods" />
 
     <fragment
         android:id="@+id/navigation_favorites"
-        android:name="com.mountain96.random.ui.dashboard.DashboardFragment"
+        android:name="com.mountain96.random.ui.foods.FoodsFragment"
         android:label="@string/title_favorites"
         tools:layout="@layout/fragment_favorites" />
 
     <fragment
         android:id="@+id/navigation_combination"
-        android:name="com.mountain96.random.ui.notifications.NotificationsFragment"
+        android:name="com.mountain96.random.ui.combination.CombinationFragment"
         android:label="@string/title_combination"
         tools:layout="@layout/fragment_combination" />
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.mountain96.random.ui.notifications.NotificationsFragment"
+        android:name="com.mountain96.random.ui.combination.CombinationFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>

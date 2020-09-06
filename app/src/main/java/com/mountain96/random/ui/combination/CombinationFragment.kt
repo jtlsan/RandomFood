@@ -1,4 +1,4 @@
-package com.mountain96.random.ui.notifications
+package com.mountain96.random.ui.combination
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mountain96.random.R
 
-class NotificationsFragment : Fragment() {
+class CombinationFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
+    private lateinit var notificationsViewModel: CombinationViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -20,12 +20,9 @@ class NotificationsFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         notificationsViewModel =
-                ViewModelProviders.of(this).get(NotificationsViewModel::class.java)
+                ViewModelProviders.of(this).get(CombinationViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_combination, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+
         return root
     }
 }
