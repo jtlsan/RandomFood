@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mountain96.random.R
 import com.mountain96.random.model.FoodDTO
 import kotlinx.android.synthetic.main.fragment_foods.*
+import kotlinx.android.synthetic.main.item_food.view.*
 
 class FoodsFragment : Fragment() {
 
@@ -30,6 +32,10 @@ class FoodsFragment : Fragment() {
     inner class FoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var foodList : ArrayList<FoodDTO> = arrayListOf()
 
+        init {
+
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             var view = LayoutInflater.from(parent.context).inflate(R.layout.item_food, parent, false)
             return CustomViewHolder(view)
@@ -42,7 +48,10 @@ class FoodsFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            
+            var view = holder.itemView
+
+            view.textview_foodname.text = foodList.get(position).name
+            Glide.with(requireActivity()).load(foodList.get(position).image).into(view.imageview_food)
         }
     }
 }
