@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="5dp"
+    android:layout_margin="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,14 +19,25 @@
             android:layout_gravity="center_vertical"
             android:src="@mipmap/ic_launcher"
             android:id="@+id/imageview_food"/>
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/textview_foodname"
-            android:text="Foodname"
-            android:textAlignment="center"
-            android:textSize="20sp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:id="@+id/checkbox_itemfood" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/textview_foodname"
+                android:text="Foodname"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
