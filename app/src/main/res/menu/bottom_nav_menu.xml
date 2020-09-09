@@ -6,10 +6,6 @@
         android:icon="@drawable/icon_list"
         android:title="@string/title_foods" />
 
-    <item
-        android:id="@+id/navigation_favorites"
-        android:icon="@drawable/icon_favorite"
-        android:title="@string/title_favorites" />
 
     <item
         android:id="@+id/navigation_combination"

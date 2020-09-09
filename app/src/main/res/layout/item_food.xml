@@ -17,7 +17,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="5dp"
-            android:src="@drawable/icon_favorite_mark_bold" />
+            android:src="@drawable/icon_favorite_mark_bold"
+            android:id="@+id/icon_favorite_mark" />
 
         <ImageView
             android:layout_width="80dp"

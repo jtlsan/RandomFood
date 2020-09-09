@@ -1,4 +1,4 @@
-package com.mountain96.random.ui.combination
+package com.mountain96.random.ui.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
