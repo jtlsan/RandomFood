@@ -12,7 +12,7 @@ import com.mountain96.random.R
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: CombinationViewModel
+    private lateinit var notificationsViewModel: SettingsViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -20,7 +20,7 @@ class SettingsFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         notificationsViewModel =
-                ViewModelProviders.of(this).get(CombinationViewModel::class.java)
+                ViewModelProviders.of(this).get(SettingsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
 
         return root
