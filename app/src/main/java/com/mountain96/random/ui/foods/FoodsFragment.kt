@@ -3,15 +3,13 @@ package com.mountain96.random.ui.foods
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.inflate
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mountain96.random.R
-import com.mountain96.random.model.FoodDTO
-import kotlinx.android.synthetic.main.fragment_foods.*
+import com.mountain96.random.model.Food
 import kotlinx.android.synthetic.main.item_food.view.*
 
 class FoodsFragment : Fragment() {
@@ -30,7 +28,7 @@ class FoodsFragment : Fragment() {
     }
 
     inner class FoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        var foodList : ArrayList<FoodDTO> = arrayListOf()
+        var foodList : ArrayList<Food> = arrayListOf()
 
         init {
 

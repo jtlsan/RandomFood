@@ -32,11 +32,14 @@ class CombinationFragment : Fragment() {
         spinner.adapter = spinnerAdapter
 
 
+        /*
         var image = root.imageview_food1
         var  params: FrameLayout.LayoutParams = FrameLayout.LayoutParams(LayoutParams.)
         params.gravity = Gravity.TOP + Gravity.END
         image.layoutParams = params
         image.setBackgroundColor(resources.getColor(R.color.colorDivision))
+
+         */
 
 
 
