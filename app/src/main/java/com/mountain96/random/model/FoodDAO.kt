@@ -13,6 +13,9 @@ interface FoodDAO {
     @Query("SELECT * FROM food WHERE uid IN (:foodIds)")
     fun loadAllByIds(foodIds: IntArray): List<Food>
 
+    @Query("SELECT * FROM food WHERE category LIKE :foodCategory")
+    fun loadAllByCategory(foodCategory: FoodCategory): List<Food>
+
     @Query("SELECT * FROM food WHERE name LIKE :name LIMIT 1")
     fun findByName(name: String): Food
 
