@@ -23,21 +23,21 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.navigation_foods,  R.id.navigation_combination, R.id.navigation_settings))
         navView.setupWithNavController(navController)
+        resetFoodCheckbox()
     }
 
     override fun onDestroy() {
-        revertFood()
         super.onDestroy()
     }
 
-    fun revertFood() {
+    fun resetFoodCheckbox() {
         var db: AppDatabase? = AppDatabase.getInstance(this)
         var foodList: List<Food> = db!!.foodDao().getALL()
         for(food in foodList) {
             if (food.isChecked!!) {
                 food.isChecked = false
+                db!!.foodDao().updateFood(food)
             }
-            db!!.foodDao().updateFood(food)
         }
     }
 }
