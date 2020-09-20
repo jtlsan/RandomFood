@@ -23,7 +23,9 @@ import kotlinx.android.synthetic.main.item_food.view.*
 class FoodsFragment : Fragment() {
 
     private lateinit var dashboardViewModel: FoodsViewModel
-
+    var adapter: FoodsRecyclerviewAdapter? = null
+    var db: AppDatabase? = null
+    val TAG: String = "FoodsFragment"
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -33,14 +35,25 @@ class FoodsFragment : Fragment() {
         dashboardViewModel =
                 ViewModelProviders.of(this).get(FoodsViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_foods, container, false)
-        val adapter: FoodsRecyclerviewAdapter = FoodsRecyclerviewAdapter()
+        adapter = FoodsRecyclerviewAdapter()
         view.foods_recyclerview.adapter = adapter
         view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
-        setUpCheckbox(view, adapter)
+        setUpCheckbox(view)
         return view
     }
 
-    fun setUpCheckbox(view: View, adapter: FoodsRecyclerviewAdapter) {
+    override fun onDestroyView() {
+        updateDB()
+        super.onDestroyView()
+    }
+
+    fun updateDB() {
+        for(food in adapter!!.foodList) {
+            db!!.foodDao().updateFood(food)
+        }
+    }
+
+    fun setUpCheckbox(view: View) {
         val koreanCheckBox = view.koreanfood_checkbox
         val chineseCheckBox = view.chinesefood_checkbox
         val japaneseCheckBox = view.japanesefood_checkbox
@@ -53,7 +66,7 @@ class FoodsFragment : Fragment() {
             if (allCheckBox.isChecked){
                 uncheckAllCheckbox(view)
                 allCheckBox.isChecked = true
-                adapter.selectAll()
+                adapter!!.selectAll()
             } else {
                 allCheckBox.isChecked = true
             }
@@ -64,50 +77,50 @@ class FoodsFragment : Fragment() {
             if (koreanCheckBox.isChecked){
                 uncheckAllCheckbox(view)
                 koreanCheckBox.isChecked = true
-                adapter.selectByCategory(FoodCategory.KOREAN)
+                adapter!!.selectByCategory(FoodCategory.KOREAN)
             } else {
                 allCheckBox.isChecked = true
-                adapter.selectAll()
+                adapter!!.selectAll()
             }
         }
         chineseCheckBox.setOnClickListener {
             if (chineseCheckBox.isChecked){
                 uncheckAllCheckbox(view)
                 chineseCheckBox.isChecked = true
-                adapter.selectByCategory(FoodCategory.CHINESE)
+                adapter!!.selectByCategory(FoodCategory.CHINESE)
             } else {
                 allCheckBox.isChecked = true
-                adapter.selectAll()
+                adapter!!.selectAll()
             }
         }
         japaneseCheckBox.setOnClickListener {
             if (japaneseCheckBox.isChecked){
                 uncheckAllCheckbox(view)
                 japaneseCheckBox.isChecked = true
-                adapter.selectByCategory(FoodCategory.JAPANESE)
+                adapter!!.selectByCategory(FoodCategory.JAPANESE)
             } else {
                 allCheckBox.isChecked = true
-                adapter.selectAll()
+                adapter!!.selectAll()
             }
         }
         westernCheckBox.setOnClickListener {
             if (westernCheckBox.isChecked){
                 uncheckAllCheckbox(view)
                 westernCheckBox.isChecked = true
-                adapter.selectByCategory(FoodCategory.WESTERN)
+                adapter!!.selectByCategory(FoodCategory.WESTERN)
             } else {
                 allCheckBox.isChecked = true
-                adapter.selectAll()
+                adapter!!.selectAll()
             }
         }
         othersCheckBox.setOnClickListener {
             if (othersCheckBox.isChecked){
                 uncheckAllCheckbox(view)
                 othersCheckBox.isChecked = true
-                adapter.selectByCategory(FoodCategory.OTHERS)
+                adapter!!.selectByCategory(FoodCategory.OTHERS)
             } else {
                 allCheckBox.isChecked = true
-                adapter.selectAll()
+                adapter!!.selectAll()
             }
         }
     }
@@ -123,16 +136,16 @@ class FoodsFragment : Fragment() {
 
     inner class FoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var foodList : ArrayList<Food> = arrayListOf()
-        var db: AppDatabase? = null
+        //var db: AppDatabase? = null
 
         init {
             db = AppDatabase.getInstance(context!!)
             val savedFoods = db!!.foodDao().getALL()
             if (savedFoods.isNotEmpty()) {
                 //배포시 내용 삭제하고 주석 없애기
-                //foodList.addAll(savedFoods)
-                db?.clearAllTables()
-                InitSettings.initFoods(db, foodList)
+                foodList.addAll(savedFoods)
+                //db?.clearAllTables()
+                //InitSettings.initFoods(db, foodList)
             } else {
                 InitSettings.initFoods(db, foodList)
             }
@@ -174,9 +187,23 @@ class FoodsFragment : Fragment() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val db = Room.databaseBuilder(context!!, AppDatabase::class.java, "foods.db")
             var view = holder.itemView
+            var food = foodList.get(position)
 
+            view.checkbox_itemfood.setOnClickListener(View.OnClickListener {
+                if(view.checkbox_itemfood.isChecked) {
+                    food.isChecked = true
+                } else {
+                    food.isChecked = false
+                }
+                foodList.set(position, food)
+            })
             view.textview_foodname.text = foodList.get(position).name
             Glide.with(requireActivity()).load(foodList.get(position).image).into(view.imageview_food)
+            if (food.isChecked) {
+                view.checkbox_itemfood.isChecked = true
+            } else {
+                view.checkbox_itemfood.isChecked = false
+            }
         }
     }
 }
