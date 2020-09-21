@@ -185,20 +185,43 @@ class FoodsFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            val db = Room.databaseBuilder(context!!, AppDatabase::class.java, "foods.db")
             var view = holder.itemView
             var food = foodList.get(position)
 
-            view.checkbox_itemfood.setOnClickListener(View.OnClickListener {
+            view.linearlayout_select_area.setOnClickListener(View.OnClickListener {
                 if(view.checkbox_itemfood.isChecked) {
-                    food.isChecked = true
-                } else {
                     food.isChecked = false
+                    view.checkbox_itemfood.isChecked = false
+                } else {
+                    food.isChecked = true
+                    view.checkbox_itemfood.isChecked = true
                 }
                 foodList.set(position, food)
+                db!!.foodDao().updateFood(food)
             })
+
+            view.icon_favorite_mark.setOnClickListener {
+                if (food.isFavorite) {
+                    food.isFavorite = false
+                    view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_bold))
+                    //빈 그림으로 대체
+                } else {
+                    food.isFavorite = true
+                    view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_fill))
+                    //채워진 그림으로 대체
+                }
+                foodList.set(position, food)
+                db!!.foodDao().updateFood(food)
+            }
             view.textview_foodname.text = foodList.get(position).name
             Glide.with(requireActivity()).load(foodList.get(position).image).into(view.imageview_food)
+
+            if (food.isFavorite) {
+                view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_fill))
+            } else {
+                view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_bold))
+            }
+
             if (food.isChecked) {
                 view.checkbox_itemfood.isChecked = true
             } else {
