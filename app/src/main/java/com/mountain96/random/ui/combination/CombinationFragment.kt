@@ -12,11 +12,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mountain96.random.R
+import com.mountain96.random.model.AppDatabase
+import com.mountain96.random.model.Food
 import kotlinx.android.synthetic.main.fragment_combination.view.*
 
 class CombinationFragment : Fragment() {
 
     private lateinit var notificationsViewModel: CombinationViewModel
+    var db: AppDatabase? = null
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -25,12 +29,13 @@ class CombinationFragment : Fragment() {
     ): View? {
         notificationsViewModel =
                 ViewModelProviders.of(this).get(CombinationViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_combination, container, false)
+        val view = inflater.inflate(R.layout.fragment_combination, container, false)
 
-        var spinner = root.spinner_combination_count
+        var spinner = view.spinner_combination_count
         var spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, resources.getStringArray(R.array.combination_count))
         spinner.adapter = spinnerAdapter
-
+        db = AppDatabase.getInstance(requireContext())
+        countSelectedFoods(view)
 
         /*
         var image = root.imageview_food1
@@ -43,6 +48,15 @@ class CombinationFragment : Fragment() {
 
 
 
-        return root
+        return view
+    }
+
+    fun countSelectedFoods(view: View) {
+        var savedFoods = db!!.foodDao().loadAllByChecked()
+        if (savedFoods.isEmpty()) {
+            view.selected_food_count.text = "0"
+        } else {
+            view.selected_food_count.text = savedFoods.size.toString()
+        }
     }
 }

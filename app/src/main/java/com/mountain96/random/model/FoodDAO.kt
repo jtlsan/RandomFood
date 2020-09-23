@@ -22,6 +22,9 @@ interface FoodDAO {
     @Query("SELECT * FROM food WHERE category LIKE :foodCategory AND isFavorite = 1")
     fun loadAllFavoritesByCategory(foodCategory: FoodCategory): List<Food>
 
+    @Query("SELECT * FROM food WHERE isChecked = 1")
+    fun loadAllByChecked(): List<Food>
+
     @Update
     fun updateFood(vararg food:Food)
 
