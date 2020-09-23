@@ -16,6 +16,12 @@ interface FoodDAO {
     @Query("SELECT * FROM food WHERE name LIKE :name LIMIT 1")
     fun findByName(name: String): Food
 
+    @Query("SELECT * FROM food WHERE isFavorite = 1")
+    fun getAllFavorites(): List<Food>
+
+    @Query("SELECT * FROM food WHERE category LIKE :foodCategory AND isFavorite = 1")
+    fun loadAllFavoritesByCategory(foodCategory: FoodCategory): List<Food>
+
     @Update
     fun updateFood(vararg food:Food)
 

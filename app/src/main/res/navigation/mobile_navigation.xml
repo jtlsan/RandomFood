@@ -10,7 +10,11 @@
         android:name="com.mountain96.random.ui.foods.FoodsFragment"
         android:label="@string/title_foods"
         tools:layout="@layout/fragment_foods" />
-
+    <fragment
+        android:id="@+id/navigation_favorite"
+        android:name="com.mountain96.random.ui.favorite.FavoriteFragment"
+        android:label="Favorite"
+        tools:layout="@layout/fragment_favorite" />
 
     <fragment
         android:id="@+id/navigation_combination"

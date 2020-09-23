@@ -1,46 +1,49 @@
-package com.mountain96.random.ui.foods
+package com.mountain96.random.ui.favorite
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mountain96.random.R
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.Food
 import com.mountain96.random.model.FoodCategory
-import kotlinx.android.synthetic.main.fragment_foods.*
+import com.mountain96.random.ui.foods.FoodsFragment
+import com.mountain96.random.ui.foods.InitSettings
 import kotlinx.android.synthetic.main.fragment_foods.view.*
 import kotlinx.android.synthetic.main.item_food.view.*
 
-class FoodsFragment : Fragment() {
+class FavoriteFragment : Fragment(){
 
-    private lateinit var dashboardViewModel: FoodsViewModel
-    var adapter: FoodsRecyclerviewAdapter? = null
+    var adapter: FavoriteFragment.FavoriteFoodsRecyclerviewAdapter? = null
     var db: AppDatabase? = null
-    val TAG: String = "FoodsFragment"
+    var recyclerview: RecyclerView? = null
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(FoodsViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_foods, container, false)
-        adapter = FoodsRecyclerviewAdapter()
-        view.foods_recyclerview.adapter = adapter
-        view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
+        adapter = FavoriteFoodsRecyclerviewAdapter()
+        recyclerview = view.foods_recyclerview
+        recyclerview!!.adapter = adapter
+        recyclerview!!.layoutManager = LinearLayoutManager(activity)
         setUpCheckbox(view)
         return view
+    }
+
+    fun updateFavorite(position: Int) {
+        adapter!!.foodList.removeAt(position)
+        recyclerview!!.removeViewAt(position)
+        adapter!!.notifyItemRemoved(position);
+        adapter!!.notifyItemRangeChanged(position, adapter!!.foodList.size)
+        adapter!!.notifyDataSetChanged()
     }
 
     override fun onDestroyView() {
@@ -135,33 +138,27 @@ class FoodsFragment : Fragment() {
         view.otherfood_checkbox.isChecked = false
     }
 
-    inner class FoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    inner class FavoriteFoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var foodList : ArrayList<Food> = arrayListOf()
         //var db: AppDatabase? = null
 
         init {
             db = AppDatabase.getInstance(context!!)
-            val savedFoods = db!!.foodDao().getALL()
-            if (savedFoods.isNotEmpty()) {
-                //배포시 내용 삭제하고 주석 없애기
-                foodList.addAll(savedFoods)
-                //db?.clearAllTables()
-                //InitSettings.initFoods(db, foodList)
-            } else {
-                InitSettings.initFoods(db, foodList)
-            }
+            val savedFoods = db!!.foodDao().getAllFavorites()
+            foodList.addAll(savedFoods)
         }
 
         fun selectByCategory(category: FoodCategory) {
             foodList.clear()
-            val savedFoods = db!!.foodDao().loadAllByCategory(category)
+            val savedFoods = db!!.foodDao().loadAllFavoritesByCategory(category)
             foodList.addAll(savedFoods)
             this.notifyDataSetChanged()
         }
 
         fun selectAll() {
             foodList.clear()
-            val savedFoods = db!!.foodDao().getALL()
+            val savedFoods = db!!.foodDao().getAllFavorites()
             foodList.addAll(savedFoods)
             this.notifyDataSetChanged()
         }
@@ -170,6 +167,8 @@ class FoodsFragment : Fragment() {
             var view = LayoutInflater.from(parent.context).inflate(R.layout.item_food, parent, false)
             return CustomViewHolder(view)
         }
+
+
 
         inner class CustomViewHolder(view : View) : RecyclerView.ViewHolder(view)
 
@@ -203,6 +202,8 @@ class FoodsFragment : Fragment() {
                 }
                 foodList.set(position, food)
                 db!!.foodDao().updateFood(food)
+                updateFavorite(position)
+
             }
             view.textview_foodname.text = foodList.get(position).name
             Glide.with(requireActivity()).load(foodList.get(position).image).apply(RequestOptions().circleCrop()).into(view.imageview_food)

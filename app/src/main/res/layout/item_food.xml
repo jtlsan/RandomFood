@@ -32,9 +32,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_gravity="end"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/item_checkbox"
                     android:id="@+id/checkbox_itemfood" />
                 <TextView
                     android:layout_width="match_parent"
@@ -43,6 +47,7 @@
                     android:id="@+id/textview_foodname"
                     android:text="Foodname"
                     android:textAlignment="center"
+                    android:textColor="@color/colorCheckboxText"
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
