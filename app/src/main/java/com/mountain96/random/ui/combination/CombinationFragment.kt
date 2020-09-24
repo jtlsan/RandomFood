@@ -11,6 +11,8 @@ import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.mountain96.random.R
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.Food
@@ -42,15 +44,52 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         spinner!!.onItemSelectedListener = this
 
-        /*
-        var image = root.imageview_food1
-        var  params: FrameLayout.LayoutParams = FrameLayout.LayoutParams(LayoutParams.)
-        params.gravity = Gravity.TOP + Gravity.END
-        image.layoutParams = params
-        image.setBackgroundColor(resources.getColor(R.color.colorDivision))
-
-         */
+        rootView.button_combine.setOnClickListener {
+            pickFood(rootView.spinner_combination_count.selectedItem.toString().toInt())
+        }
     return rootView
+    }
+
+    fun pickFood(targetCount: Int) {
+        val selectedList : ArrayList<Food> = arrayListOf()
+        selectedList.addAll(db!!.foodDao().loadAllByChecked())
+        if (selectedList.isEmpty()) {
+            Toast.makeText(requireContext(), "선택한 음식이 없습니다.", Toast.LENGTH_LONG).show()
+            return
+        } else if (selectedList.size < targetCount) {
+            Toast.makeText(requireContext(), "선택한 음식의 숫자가 충분하지 않습니다.", Toast.LENGTH_LONG).show()
+            return
+        }
+        for(i in 0 until (targetCount)) {
+            var randomNum = 0
+            while(randomNum == 0 || randomNum == selectedList.size+1) {
+                randomNum = (Math.random() * (selectedList.size+1)).toInt()
+            }
+            val food = selectedList.get(randomNum-1)
+            loadFoodToView(food, i)
+            selectedList.remove(food)
+        }
+    }
+
+    fun loadFoodToView(food: Food, position: Int) {
+        when(position) {
+            0 -> {
+                Glide.with(requireContext()).load(food.image).apply(RequestOptions().circleCrop()).into(foodContainerList.get(position).imageview_food1)
+                foodContainerList.get(position).textview_food1.text = food.name
+            }
+            1 -> {
+                Glide.with(requireContext()).load(food.image).apply(RequestOptions().circleCrop()).into(foodContainerList.get(position).imageview_food2)
+                foodContainerList.get(position).textview_food2.text = food.name
+            }
+            2 -> {
+                Glide.with(requireContext()).load(food.image).apply(RequestOptions().circleCrop()).into(foodContainerList.get(position).imageview_food3)
+                foodContainerList.get(position).textview_food3.text = food.name
+            }
+            3 -> {
+                Glide.with(requireContext()).load(food.image).apply(RequestOptions().circleCrop()).into(foodContainerList.get(position).imageview_food4)
+                foodContainerList.get(position).textview_food4.text = food.name
+            }
+        }
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
