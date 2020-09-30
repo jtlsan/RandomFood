@@ -39,7 +39,7 @@ class FoodsFragment : Fragment() {
         adapter = FoodsRecyclerviewAdapter()
         view.foods_recyclerview.adapter = adapter
         view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
-        setUpCheckbox(view)
+        //setUpCheckbox(view)
         return view
     }
 
@@ -54,6 +54,7 @@ class FoodsFragment : Fragment() {
         }
     }
 
+    /*
     fun setUpCheckbox(view: View) {
         val koreanCheckBox = view.koreanfood_checkbox
         val chineseCheckBox = view.chinesefood_checkbox
@@ -134,6 +135,28 @@ class FoodsFragment : Fragment() {
         view.westernfood_checkbox.isChecked = false
         view.otherfood_checkbox.isChecked = false
     }
+
+     */
+
+    /*
+    inner class CategoryRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
+            return CategoryViewHolder(view)
+        }
+
+        inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view)
+
+        override fun getItemCount(): Int {
+
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
+        }
+    }
+
+     */
 
     inner class FoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var foodList : ArrayList<Food> = arrayListOf()
