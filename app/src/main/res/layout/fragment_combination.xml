@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.combination.CombinationFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/selected_item_container"
+        android:layout_marginVertical="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textColor="@color/colorCheckboxText"
+            android:text="선택한 음식 수 " />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:id="@+id/selected_food_count"
+            android:textColor="@color/colorCheckboxText"
+            android:text="00" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/selected_item_container"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:orientation="horizontal"
+        android:id="@+id/selected_item_container_division"
+        android:background="@color/colorDivision" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selected_item_container_division"
+        android:id="@+id/combination_item_container"
+        android:layout_marginVertical="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/colorCheckboxText"
+            android:textSize="25sp"
+            android:text="조합할 음식 수 " />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_combination_count"
+            android:layout_gravity="center"
+            android:textColor="@color/colorCheckboxText"
+            android:spinnerMode="dialog"
+            android:textSize="20sp"
+            android:textAlignment="center" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/combination_item_container"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:orientation="horizontal"
+        android:id="@+id/combination_item_container_division"
+        android:background="@color/colorDivision" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/combination_item_container_division"
+        android:layout_above="@id/button_combine"
+        android:orientation="vertical"
+        android:id="@+id/combination_food_result_container">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/food_container_margin"
+            android:layout_gravity="start|top"
+            android:orientation="vertical"
+            android:id="@+id/food_container1"
+            >
+            <ImageView
+                android:layout_width="@dimen/food_imageview_size"
+                android:layout_height="@dimen/food_imageview_size"
+                android:id="@+id/imageview_food1"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/colorCheckboxText"
+                android:textSize="20sp"
+                android:id="@+id/textview_food1"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_margin="@dimen/food_container_margin"
+            android:orientation="vertical"
+            android:id="@+id/food_container2"
+            >
+            <ImageView
+                android:layout_width="@dimen/food_imageview_size"
+                android:layout_height="@dimen/food_imageview_size"
+                android:id="@+id/imageview_food2"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorCheckboxText"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:id="@+id/textview_food2"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/food_container_margin"
+            android:layout_gravity="start|bottom"
+            android:orientation="vertical"
+            android:id="@+id/food_container3"
+            >
+            <ImageView
+                android:layout_width="@dimen/food_imageview_size"
+                android:layout_height="@dimen/food_imageview_size"
+                android:id="@+id/imageview_food3"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorCheckboxText"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:id="@+id/textview_food3"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/food_container_margin"
+            android:id="@+id/food_container4"
+            >
+            <ImageView
+                android:layout_width="@dimen/food_imageview_size"
+                android:layout_height="@dimen/food_imageview_size"
+                android:id="@+id/imageview_food4"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorCheckboxText"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:id="@+id/textview_food4"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+
+
+
+        <!--
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    layout
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+            </FrameLayout>
+        </LinearLayout>
+        -->
+    </FrameLayout>
+    <Button
+        android:layout_margin="10dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="랜덤조합!"
+        android:id="@+id/button_combine"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

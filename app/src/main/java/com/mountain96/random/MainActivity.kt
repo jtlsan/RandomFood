@@ -7,6 +7,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.mountain96.random.model.AppDatabase
+import com.mountain96.random.model.Food
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,8 +21,23 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications))
-        setupActionBarWithNavController(navController, appBarConfiguration)
+                R.id.navigation_foods,  R.id.navigation_combination, R.id.navigation_settings))
         navView.setupWithNavController(navController)
+        resetFoodCheckbox()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    fun resetFoodCheckbox() {
+        var db: AppDatabase? = AppDatabase.getInstance(this)
+        var foodList: List<Food> = db!!.foodDao().getALL()
+        for(food in foodList) {
+            if (food.isChecked!!) {
+                food.isChecked = false
+                db!!.foodDao().updateFood(food)
+            }
+        }
     }
 }
