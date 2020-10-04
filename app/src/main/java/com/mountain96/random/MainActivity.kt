@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_foods,  R.id.navigation_combination, R.id.navigation_settings))
         navView.setupWithNavController(navController)
         resetFoodCheckbox()
+        resetFoodCategory()
     }
 
     override fun onDestroy() {
@@ -31,13 +32,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun resetFoodCheckbox() {
-        var db: AppDatabase? = AppDatabase.getInstance(this)
-        var foodList: List<Food> = db!!.foodDao().getALL()
+        val db: AppDatabase? = AppDatabase.getInstance(this)
+        val foodList: List<Food> = db!!.foodDao().getALL()
         for(food in foodList) {
-            if (food.isChecked!!) {
+            if (food.isChecked) {
                 food.isChecked = false
-                db!!.foodDao().updateFood(food)
+                db.foodDao().updateFood(food)
             }
         }
+    }
+
+    fun resetFoodCategory() {
+        val db: AppDatabase? = AppDatabase.getInstance(this)
+        val categoryList = db!!.foodCategoryDao().getAll()
+        for (category in categoryList) {
+            if (category.isChecked) {
+                category.isChecked = false
+                db.foodCategoryDao().updateCategory(category)
+            }
+        }
+        val categoryAll = categoryList.get(0)
+        categoryAll.isChecked = true
+        db.foodCategoryDao().updateCategory(categoryAll)
     }
 }

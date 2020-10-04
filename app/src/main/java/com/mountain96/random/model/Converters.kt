@@ -3,6 +3,7 @@ package com.mountain96.random.model
 import androidx.room.TypeConverter
 
 class Converters {
+    /*
     @TypeConverter
     fun toCategory(value: Int): FoodCategory? {
         return FoodCategory.values().get(value)
@@ -20,4 +21,6 @@ class Converters {
         }
         return ret
     }
+
+     */
 }

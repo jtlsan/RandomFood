@@ -5,20 +5,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mountain96.random.R
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.Food
 import com.mountain96.random.model.FoodCategory
-import kotlinx.android.synthetic.main.fragment_foods.*
+import com.mountain96.random.model.FoodCategoryWithFood
 import kotlinx.android.synthetic.main.fragment_foods.view.*
+import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_food.view.*
 
 class FoodsFragment : Fragment() {
@@ -36,10 +35,19 @@ class FoodsFragment : Fragment() {
         dashboardViewModel =
                 ViewModelProviders.of(this).get(FoodsViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_foods, container, false)
+        db = AppDatabase.getInstance(requireContext())
+
+
+        var categoryAdapter = CategoryRecyclerviewAdapter()
+        view.category_recyclerview.adapter = categoryAdapter
+        var categoryLayout = LinearLayoutManager(activity)
+        categoryLayout.orientation = RecyclerView.HORIZONTAL
+        view.category_recyclerview.layoutManager = categoryLayout
+        view.category_recyclerview.isHorizontalScrollBarEnabled = false
+
         adapter = FoodsRecyclerviewAdapter()
         view.foods_recyclerview.adapter = adapter
         view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
-        //setUpCheckbox(view)
         return view
     }
 
@@ -54,92 +62,20 @@ class FoodsFragment : Fragment() {
         }
     }
 
-    /*
-    fun setUpCheckbox(view: View) {
-        val koreanCheckBox = view.koreanfood_checkbox
-        val chineseCheckBox = view.chinesefood_checkbox
-        val japaneseCheckBox = view.japanesefood_checkbox
-        val westernCheckBox = view.westernfood_checkbox
-        val othersCheckBox = view.otherfood_checkbox
-        val allCheckBox = view.allfood_checkbox
-
-        allCheckBox.isChecked = true
-        allCheckBox.setOnClickListener {
-            if (allCheckBox.isChecked){
-                uncheckAllCheckbox(view)
-                allCheckBox.isChecked = true
-                adapter!!.selectAll()
-            } else {
-                allCheckBox.isChecked = true
-            }
-        }
-
-
-        koreanCheckBox.setOnClickListener {
-            if (koreanCheckBox.isChecked){
-                uncheckAllCheckbox(view)
-                koreanCheckBox.isChecked = true
-                adapter!!.selectByCategory(FoodCategory.KOREAN)
-            } else {
-                allCheckBox.isChecked = true
-                adapter!!.selectAll()
-            }
-        }
-        chineseCheckBox.setOnClickListener {
-            if (chineseCheckBox.isChecked){
-                uncheckAllCheckbox(view)
-                chineseCheckBox.isChecked = true
-                adapter!!.selectByCategory(FoodCategory.CHINESE)
-            } else {
-                allCheckBox.isChecked = true
-                adapter!!.selectAll()
-            }
-        }
-        japaneseCheckBox.setOnClickListener {
-            if (japaneseCheckBox.isChecked){
-                uncheckAllCheckbox(view)
-                japaneseCheckBox.isChecked = true
-                adapter!!.selectByCategory(FoodCategory.JAPANESE)
-            } else {
-                allCheckBox.isChecked = true
-                adapter!!.selectAll()
-            }
-        }
-        westernCheckBox.setOnClickListener {
-            if (westernCheckBox.isChecked){
-                uncheckAllCheckbox(view)
-                westernCheckBox.isChecked = true
-                adapter!!.selectByCategory(FoodCategory.WESTERN)
-            } else {
-                allCheckBox.isChecked = true
-                adapter!!.selectAll()
-            }
-        }
-        othersCheckBox.setOnClickListener {
-            if (othersCheckBox.isChecked){
-                uncheckAllCheckbox(view)
-                othersCheckBox.isChecked = true
-                adapter!!.selectByCategory(FoodCategory.OTHERS)
-            } else {
-                allCheckBox.isChecked = true
-                adapter!!.selectAll()
-            }
-        }
-    }
-
-    fun uncheckAllCheckbox(view: View) {
-        view.allfood_checkbox.isChecked = false
-        view.koreanfood_checkbox.isChecked = false
-        view.chinesefood_checkbox.isChecked = false
-        view.japanesefood_checkbox.isChecked = false
-        view.westernfood_checkbox.isChecked = false
-        view.otherfood_checkbox.isChecked = false
-    }
-
-     */
-
-    /*
     inner class CategoryRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        var categoryList : ArrayList<FoodCategory> = arrayListOf()
+
+        init {
+            val savedCategory = db!!.foodCategoryDao().getAll()
+            if (savedCategory.isNotEmpty()) {
+                categoryList.addAll(savedCategory)
+                //db?.clearAllTables()
+                //InitSettings.initCategory(db!!, categoryList)
+            } else {
+                InitSettings.initCategory(db!!, categoryList)
+            }
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
             return CategoryViewHolder(view)
@@ -148,22 +84,82 @@ class FoodsFragment : Fragment() {
         inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
         override fun getItemCount(): Int {
-
+            return categoryList.size
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            var itemview = holder.itemView
+            var category = categoryList.get(position)
 
+            itemview.category_button.text = category.name
+
+            if (category.isChecked) {
+                itemview.category_button.background = resources.getDrawable(R.drawable.button_category_filled)
+                itemview.category_button.setTextColor(resources.getColor(R.color.colorCategorySelected))
+                setFoodsByCategory(category.foodCategoryId)
+            }
+            else {
+                itemview.category_button.background = resources.getDrawable(R.drawable.button_category)
+                itemview.category_button.setTextColor(resources.getColor(R.color.colorCategoryUnselected))
+            }
+
+            itemview.category_button.setOnClickListener {
+                if (category.isChecked) {
+                    selectCategoryAll()
+                    adapter!!.selectAll()
+                } else {
+                    for(category in categoryList) {
+                        category.isChecked = false
+                    }
+                    category.isChecked = true
+                    setFoodsByCategory(category.foodCategoryId)
+                    categoryList.set(position, category)
+                }
+                this.notifyDataSetChanged()
+
+                var categoryDao = db!!.foodCategoryDao()
+                for(category in categoryList) {
+                    categoryDao.updateCategory(category)
+                }
+            }
+        }
+
+        fun selectCategoryAll() {
+            for(category in categoryList) {
+                category.isChecked = false
+            }
+            for(category in categoryList) {
+                if (category.foodCategoryId == 0) {
+                    category.isChecked = true
+                    break
+                }
+            }
+        }
+
+        fun setFoodsByCategory(foodCategoryId: Int) {
+            if (foodCategoryId == 0) {
+                adapter!!.selectAll()
+                return
+            }
+            val foodCategoryWithFood = db!!.foodCategoryDao().getFoodCategoryWithFood()
+            var selectedCategoryWithFood : FoodCategoryWithFood? = null
+            for (item in foodCategoryWithFood) {
+                if (item.category.foodCategoryId == foodCategoryId) {
+                    selectedCategoryWithFood = item
+                    break
+                }
+            }
+            adapter!!.selectByCategory(selectedCategoryWithFood?.foodList!!)
         }
     }
 
-     */
+
 
     inner class FoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var foodList : ArrayList<Food> = arrayListOf()
         //var db: AppDatabase? = null
 
         init {
-            db = AppDatabase.getInstance(context!!)
             val savedFoods = db!!.foodDao().getALL()
             if (savedFoods.isNotEmpty()) {
                 //배포시 내용 삭제하고 주석 없애기
@@ -175,11 +171,11 @@ class FoodsFragment : Fragment() {
             }
         }
 
-        fun selectByCategory(category: FoodCategory) {
+        fun selectByCategory(newList: List<Food>) {
             foodList.clear()
-            val savedFoods = db!!.foodDao().loadAllByCategory(category)
-            foodList.addAll(savedFoods)
+            foodList.addAll(newList)
             this.notifyDataSetChanged()
+
         }
 
         fun selectAll() {

@@ -6,4 +6,6 @@
     <color name="colorDivision">#ffebcc</color>
     <color name="colorCheckboxText">#000000</color>
     <color name="colorNavSelector">#ffad33</color>
+    <color name="colorCategorySelected">#ffffff</color>
+    <color name="colorCategoryUnselected">#000000</color>
 </resources>

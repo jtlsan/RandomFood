@@ -34,7 +34,7 @@ class FavoriteFragment : Fragment(){
         recyclerview = view.foods_recyclerview
         recyclerview!!.adapter = adapter
         recyclerview!!.layoutManager = LinearLayoutManager(activity)
-        setUpCheckbox(view)
+        //setUpCheckbox(view)
         return view
     }
 
@@ -57,6 +57,7 @@ class FavoriteFragment : Fragment(){
         }
     }
 
+    /*
     fun setUpCheckbox(view: View) {
         val koreanCheckBox = view.koreanfood_checkbox
         val chineseCheckBox = view.chinesefood_checkbox
@@ -138,6 +139,8 @@ class FavoriteFragment : Fragment(){
         view.otherfood_checkbox.isChecked = false
     }
 
+     */
+
 
     inner class FavoriteFoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var foodList : ArrayList<Food> = arrayListOf()
@@ -150,10 +153,13 @@ class FavoriteFragment : Fragment(){
         }
 
         fun selectByCategory(category: FoodCategory) {
+            /*
             foodList.clear()
             val savedFoods = db!!.foodDao().loadAllFavoritesByCategory(category)
             foodList.addAll(savedFoods)
             this.notifyDataSetChanged()
+
+             */
         }
 
         fun selectAll() {
