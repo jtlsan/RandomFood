@@ -8,4 +8,5 @@
     <color name="colorNavSelector">#ffad33</color>
     <color name="colorCategorySelected">#ffffff</color>
     <color name="colorCategoryUnselected">#000000</color>
+    <color name="colorAddButton">#c4c3c2</color>
 </resources>
