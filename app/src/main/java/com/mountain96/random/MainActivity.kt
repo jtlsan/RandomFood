@@ -46,13 +46,15 @@ class MainActivity : AppCompatActivity() {
         val db: AppDatabase? = AppDatabase.getInstance(this)
         val categoryList = db!!.foodCategoryDao().getAll()
         for (category in categoryList) {
+            if (category.foodCategoryId == 1) {
+                category.isChecked = true
+                db.foodCategoryDao().updateCategory(category)
+                continue
+            }
             if (category.isChecked) {
                 category.isChecked = false
                 db.foodCategoryDao().updateCategory(category)
             }
         }
-        val categoryAll = categoryList.get(0)
-        categoryAll.isChecked = true
-        db.foodCategoryDao().updateCategory(categoryAll)
     }
 }

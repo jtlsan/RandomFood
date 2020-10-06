@@ -3,10 +3,10 @@
     <item>
         <shape android:shape="rectangle">
             <stroke
-                android:width="1dp"
+                android:width="2dp"
                 android:dashGap="10dp"
                 android:dashWidth="10dp"
-                android:color="@color/colorAddButton" />
+                android:color="@color/colorFoodAddButton" />
             <corners
                 android:radius="10dp" />
         </shape>
@@ -14,22 +14,22 @@
     <item android:gravity="center" android:width="40dp" android:height="40dp">
         <shape android:shape="oval">
             <stroke
-                android:width="1dp"
+                android:width="2dp"
                 android:dashGap="10dp"
                 android:dashWidth="10dp"
-                android:color="@color/colorAddButton" />
+                android:color="@color/colorFoodAddButton" />
             <corners
                 android:radius="10dp" />
         </shape>
     </item>
-    <item android:gravity="center" android:width="25dp" android:height="2dp">
+    <item android:gravity="center" android:width="25dp" android:height="3dp">
         <shape android:shape="line">
             <stroke
-                android:width="1dp"
-                android:color="@color/colorAddButton" />
+                android:width="2dp"
+                android:color="@color/colorFoodAddButton" />
         </shape>
     </item>
-    <item android:gravity="center" android:width="25dp" android:height="2dp">
+    <item android:gravity="center" android:width="25dp" android:height="3dp">
         <rotate
             android:fromDegrees="90"
             android:pivotX="50%"
@@ -37,8 +37,8 @@
             android:toDegrees="0">
             <shape android:shape="line">
                 <stroke
-                    android:width="1dp"
-                    android:color="@color/colorAddButton" />
+                    android:width="2dp"
+                    android:color="@color/colorFoodAddButton" />
             </shape>
 
         </rotate>

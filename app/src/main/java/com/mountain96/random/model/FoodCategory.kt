@@ -8,5 +8,6 @@ import androidx.room.PrimaryKey
 data class FoodCategory (
     @PrimaryKey val foodCategoryId: Int,
     @ColumnInfo(name = "name") var name: String,
-    @ColumnInfo(name = "isChecked") var isChecked: Boolean
+    @ColumnInfo(name = "isChecked") var isChecked: Boolean,
+    @ColumnInfo(name = "type") var type : ModelType
 )

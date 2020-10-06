@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,15 +13,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mountain96.random.R
-import com.mountain96.random.model.AppDatabase
-import com.mountain96.random.model.Food
-import com.mountain96.random.model.FoodCategory
-import com.mountain96.random.model.FoodCategoryWithFood
+import com.mountain96.random.model.*
 import kotlinx.android.synthetic.main.fragment_foods.view.*
 import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_food.view.*
 
 class FoodsFragment : Fragment() {
+    //viewtype for recyclerview
+    companion object{
+        const val TYPE_ADD = 0
+        const val TYPE_ITEM = 1
+    }
 
     private lateinit var dashboardViewModel: FoodsViewModel
     var adapter: FoodsRecyclerviewAdapter? = null
@@ -63,9 +66,13 @@ class FoodsFragment : Fragment() {
     }
 
     inner class CategoryRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
         var categoryList : ArrayList<FoodCategory> = arrayListOf()
 
         init {
+            //** 모델 변경시에만
+            db?.clearAllTables()
+            //**
             val savedCategory = db!!.foodCategoryDao().getAll()
             if (savedCategory.isNotEmpty()) {
                 categoryList.addAll(savedCategory)
@@ -76,11 +83,26 @@ class FoodsFragment : Fragment() {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
-            return CategoryViewHolder(view)
+        override fun getItemViewType(position: Int): Int {
+            super.getItemViewType(position)
+            var result : Int
+            when(categoryList.get(position).type) {
+                ModelType.TYPE_BUTTON -> result = 0
+                ModelType.TYPE_ITEM -> result = 1
+            }
+            return result
         }
 
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            var viewHolder : RecyclerView.ViewHolder? = null
+            when(viewType) {
+                0 -> viewHolder = CategoryAddViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_category_add, parent, false))
+                1 -> viewHolder = CategoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false))
+            }
+            return viewHolder!!
+        }
+
+        inner class CategoryAddViewHolder(view: View) : RecyclerView.ViewHolder(view)
         inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
         override fun getItemCount(): Int {
@@ -92,6 +114,12 @@ class FoodsFragment : Fragment() {
             var category = categoryList.get(position)
 
             itemview.category_button.text = category.name
+
+            if (category.type == ModelType.TYPE_BUTTON) {
+
+                return
+            }
+
 
             if (category.isChecked) {
                 itemview.category_button.background = resources.getDrawable(R.drawable.button_category_filled)
@@ -137,7 +165,7 @@ class FoodsFragment : Fragment() {
         }
 
         fun setFoodsByCategory(foodCategoryId: Int) {
-            if (foodCategoryId == 0) {
+            if (foodCategoryId == 1) {
                 adapter!!.selectAll()
                 return
             }
@@ -168,7 +196,18 @@ class FoodsFragment : Fragment() {
                 //InitSettings.initFoods(db, foodList)
             } else {
                 InitSettings.initFoods(db, foodList)
+                Toast.makeText(context, "foods에서 Init", Toast.LENGTH_LONG).show()
             }
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            super.getItemViewType(position)
+            var result: Int
+            when(foodList.get(position).type) {
+                ModelType.TYPE_BUTTON -> result = 0
+                ModelType.TYPE_ITEM -> result = 1
+            }
+            return result
         }
 
         fun selectByCategory(newList: List<Food>) {
@@ -186,11 +225,16 @@ class FoodsFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            var view = LayoutInflater.from(parent.context).inflate(R.layout.item_food, parent, false)
-            return CustomViewHolder(view)
+            var viewHolder : RecyclerView.ViewHolder? = null
+            when(viewType) {
+                0 -> viewHolder = FoodAddViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_food_add, parent, false))
+                1 -> viewHolder = FoodViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_food, parent, false))
+            }
+            return viewHolder!!
         }
 
-        inner class CustomViewHolder(view : View) : RecyclerView.ViewHolder(view)
+        inner class FoodAddViewHolder(view: View) : RecyclerView.ViewHolder(view)
+        inner class FoodViewHolder(view : View) : RecyclerView.ViewHolder(view)
 
         override fun getItemCount(): Int {
             return foodList.size
@@ -199,6 +243,10 @@ class FoodsFragment : Fragment() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             var view = holder.itemView
             var food = foodList.get(position)
+
+            if (food.type == ModelType.TYPE_BUTTON) {
+                return
+            }
 
             view.linearlayout_select_area.setOnClickListener(View.OnClickListener {
                 if(view.checkbox_itemfood.isChecked) {

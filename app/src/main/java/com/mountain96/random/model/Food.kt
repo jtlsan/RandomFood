@@ -21,4 +21,5 @@ data class Food (
     @ColumnInfo(name = "categoryId")var categoryId : Int,
     @ColumnInfo(name = "imageUrl")var image  : String,
     @ColumnInfo(name = "isChecked")var isChecked : Boolean = false,
-    @ColumnInfo(name = "isFavorite")var isFavorite : Boolean = false)
+    @ColumnInfo(name = "isFavorite")var isFavorite : Boolean = false,
+    @ColumnInfo(name = "type")var type : ModelType)

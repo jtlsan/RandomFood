@@ -8,8 +8,8 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = arrayOf(Food::class, FoodCategory::class), version = 5)
-//@TypeConverters(Converters::class)
+@Database(entities = arrayOf(Food::class, FoodCategory::class), version = 6)
+@TypeConverters(ModelTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun foodDao() : FoodDAO
     abstract fun foodCategoryDao() : FoodCategoryDAO
@@ -23,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "database-food"
-                ).allowMainThreadQueries().addMigrations(MIGRATION_4_5).build()
+                ).allowMainThreadQueries().addMigrations(MIGRATION_5_6).build()
             }
             return instance
         }
@@ -80,6 +80,27 @@ abstract class AppDatabase : RoomDatabase() {
                         "isChecked INTEGER NOT NULL, " +
                         "isFavorite INTEGER NOT NULL," +
                         "FOREIGN KEY (categoryId) REFERENCES foodcategory (foodCategoryId))")
+            }
+        }
+
+        val MIGRATION_5_6 = object: Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE food")
+                database.execSQL("CREATE TABLE food (" +
+                        "uid INTEGER PRIMARY KEY NOT NULL, " +
+                        "name TEXT NOT NULL, " +
+                        "categoryId INTEGER NOT NULL, " +
+                        "imageUrl TEXT NOT NULL, " +
+                        "isChecked INTEGER NOT NULL, " +
+                        "isFavorite INTEGER NOT NULL, " +
+                        "type INTEGER NOT NULL, " +
+                        "FOREIGN KEY (categoryId) REFERENCES foodcategory (foodCategoryId))")
+                database.execSQL("DROP TABLE foodcategory")
+                database.execSQL("CREATE TABLE foodcategory ("+
+                        "foodCategoryId INTEGER PRIMARY KEY NOT NULL, " +
+                        "name TEXT NOT NULL, " +
+                        "isChecked INTEGER NOT NULL, " +
+                        "type INTEGER NOT NULL)")
             }
         }
     }
