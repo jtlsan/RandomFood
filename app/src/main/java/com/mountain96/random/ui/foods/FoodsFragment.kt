@@ -43,6 +43,7 @@ class FoodsFragment : Fragment() {
 
         var categoryAdapter = CategoryRecyclerviewAdapter()
         view.category_recyclerview.adapter = categoryAdapter
+
         var categoryLayout = LinearLayoutManager(activity)
         categoryLayout.orientation = RecyclerView.HORIZONTAL
         view.category_recyclerview.layoutManager = categoryLayout
@@ -51,6 +52,8 @@ class FoodsFragment : Fragment() {
         adapter = FoodsRecyclerviewAdapter()
         view.foods_recyclerview.adapter = adapter
         view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
+
+
         return view
     }
 
@@ -71,7 +74,7 @@ class FoodsFragment : Fragment() {
 
         init {
             //** 모델 변경시에만
-            db?.clearAllTables()
+            //db?.clearAllTables()
             //**
             val savedCategory = db!!.foodCategoryDao().getAll()
             if (savedCategory.isNotEmpty()) {
@@ -140,6 +143,7 @@ class FoodsFragment : Fragment() {
                         category.isChecked = false
                     }
                     category.isChecked = true
+
                     setFoodsByCategory(category.foodCategoryId)
                     categoryList.set(position, category)
                 }
@@ -196,7 +200,6 @@ class FoodsFragment : Fragment() {
                 //InitSettings.initFoods(db, foodList)
             } else {
                 InitSettings.initFoods(db, foodList)
-                Toast.makeText(context, "foods에서 Init", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -211,7 +214,9 @@ class FoodsFragment : Fragment() {
         }
 
         fun selectByCategory(newList: List<Food>) {
+            val button = foodList.get(0)
             foodList.clear()
+            foodList.add(button)
             foodList.addAll(newList)
             this.notifyDataSetChanged()
 
