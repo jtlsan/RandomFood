@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +16,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mountain96.random.R
 import com.mountain96.random.model.*
+import com.mountain96.random.ui.foods.dialog.CategoryAddDialogFragment
+import com.mountain96.random.ui.foods.dialog.FoodDialog
 import kotlinx.android.synthetic.main.fragment_foods.view.*
 import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_food.view.*
@@ -27,8 +31,10 @@ class FoodsFragment : Fragment() {
 
     private lateinit var dashboardViewModel: FoodsViewModel
     var adapter: FoodsRecyclerviewAdapter? = null
+    var categoryAdapter: CategoryRecyclerviewAdapter? = null
     var db: AppDatabase? = null
     val TAG: String = "FoodsFragment"
+    var foodDialog : FoodDialog? = null
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -40,8 +46,9 @@ class FoodsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_foods, container, false)
         db = AppDatabase.getInstance(requireContext())
 
+        categoryAdapter = CategoryRecyclerviewAdapter()
 
-        var categoryAdapter = CategoryRecyclerviewAdapter()
+
         view.category_recyclerview.adapter = categoryAdapter
 
         var categoryLayout = LinearLayoutManager(activity)
@@ -52,6 +59,8 @@ class FoodsFragment : Fragment() {
         adapter = FoodsRecyclerviewAdapter()
         view.foods_recyclerview.adapter = adapter
         view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
+
+        foodDialog = FoodDialog(childFragmentManager, categoryAdapter)
 
 
         return view
@@ -68,6 +77,8 @@ class FoodsFragment : Fragment() {
         }
     }
 
+
+
     inner class CategoryRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         var categoryList : ArrayList<FoodCategory> = arrayListOf()
@@ -83,6 +94,13 @@ class FoodsFragment : Fragment() {
                 //InitSettings.initCategory(db!!, categoryList)
             } else {
                 InitSettings.initCategory(db!!, categoryList)
+            }
+        }
+
+        fun addCategory(name: String) {
+            FoodCategory(db!!.foodCategoryDao().getAll().size, name, false, ModelType.TYPE_ITEM).let{ category ->
+                categoryList.add(category)
+                db!!.foodCategoryDao().insertAll(category)
             }
         }
 
@@ -119,7 +137,9 @@ class FoodsFragment : Fragment() {
             itemview.category_button.text = category.name
 
             if (category.type == ModelType.TYPE_BUTTON) {
-
+                itemview.category_button.setOnClickListener {
+                    foodDialog!!.showCategoryAddDialog()
+                }
                 return
             }
 
