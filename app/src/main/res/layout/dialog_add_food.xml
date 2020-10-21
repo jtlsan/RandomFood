@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/add_food_name"
+        android:layout_margin="5dp"
+        android:theme="@style/DialogEditTextTheme"
+        android:id="@+id/textCategoryName" />
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_add_food_dialog_category"
+        android:textColor="@color/colorCheckboxText"
+        android:spinnerMode="dialog"
+        android:layout_margin="5dp"
+        android:textAlignment="center" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_food_url"
+        android:layout_marginStart="5dp"
+        android:theme="@style/DialogEditTextTheme"
+        android:id="@+id/textDialogFoodUrl" />
+</LinearLayout>

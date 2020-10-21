@@ -7,6 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
+        android:theme="@style/DialogEditTextTheme"
+        android:maxLength="4"
         android:hint="@string/add_category_name"
         android:layout_margin="5dp"
         android:id="@+id/textCategoryName" />

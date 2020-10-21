@@ -8,14 +8,26 @@ import com.mountain96.random.model.FoodCategory
 import com.mountain96.random.model.ModelType
 import com.mountain96.random.ui.foods.FoodsFragment
 
-class FoodDialog(val fragmentManager: FragmentManager, val categoryAdapter: FoodsFragment.CategoryRecyclerviewAdapter?) : CategoryAddDialogFragment.NoticeDialogListener {
+class FoodDialog(val fragmentManager: FragmentManager, val db: AppDatabase, val categoryAdapter: FoodsFragment.CategoryRecyclerviewAdapter?) : NoticeDialogListener {
     fun showCategoryAddDialog() {
         val dialog = CategoryAddDialogFragment(this)
         dialog.show(fragmentManager, "CategoryAddDialogFragment")
     }
 
-    override fun onDialogPositiveClick(dialog: DialogFragment, name: String) {
-        categoryAdapter!!.addCategory(name)
-        categoryAdapter!!.notifyDataSetChanged()
+    fun showFoodAddDialog() {
+        val dialog = FoodAddDialogFragment(this, db)
+        dialog.show(fragmentManager, "FoodAddDialogFragment")
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment, name: String, type: DialogType) {
+        when(type) {
+            DialogType.TYPE_CATEGORY -> {
+                categoryAdapter!!.addCategory(name)
+                categoryAdapter!!.notifyDataSetChanged()
+            }
+            DialogType.TYPE_FOOD -> {
+
+            }
+        }
     }
 }

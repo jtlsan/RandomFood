@@ -21,6 +21,8 @@ import com.mountain96.random.ui.foods.dialog.FoodDialog
 import kotlinx.android.synthetic.main.fragment_foods.view.*
 import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_food.view.*
+import kotlinx.android.synthetic.main.item_food.view.cardview_container
+import kotlinx.android.synthetic.main.item_food_add.view.*
 
 class FoodsFragment : Fragment() {
     //viewtype for recyclerview
@@ -60,7 +62,7 @@ class FoodsFragment : Fragment() {
         view.foods_recyclerview.adapter = adapter
         view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
 
-        foodDialog = FoodDialog(childFragmentManager, categoryAdapter)
+        foodDialog = FoodDialog(childFragmentManager, db!!, categoryAdapter)
 
 
         return view
@@ -270,6 +272,9 @@ class FoodsFragment : Fragment() {
             var food = foodList.get(position)
 
             if (food.type == ModelType.TYPE_BUTTON) {
+                view.button_add_food.setOnClickListener {
+                    foodDialog!!.showFoodAddDialog()
+                }
                 return
             }
 

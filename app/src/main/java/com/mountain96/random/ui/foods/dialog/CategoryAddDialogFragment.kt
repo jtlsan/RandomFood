@@ -12,9 +12,6 @@ import java.lang.ClassCastException
 import java.lang.IllegalStateException
 
 class CategoryAddDialogFragment(var listener: NoticeDialogListener) : DialogFragment() {
-    interface NoticeDialogListener {
-        fun onDialogPositiveClick(dialog: DialogFragment, name: String)
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -24,12 +21,17 @@ class CategoryAddDialogFragment(var listener: NoticeDialogListener) : DialogFrag
 
             builder.setView(itemView)
                 .setPositiveButton(R.string.add_button, DialogInterface.OnClickListener { dialog, id ->
-                    listener.onDialogPositiveClick(this, itemView.textCategoryName.text.toString())
+                    listener.onDialogPositiveClick(this, itemView.textCategoryName.text.toString(), DialogType.TYPE_CATEGORY)
                 })
                 .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {dialog, id ->
                     getDialog()?.cancel()
                 })
-            builder.create()
+            builder.create().apply {
+                setOnShowListener {
+                    this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.colorDialogButton))
+                    this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.colorDialogButton))
+                }
+            }
         } ?: throw IllegalStateException("Activity cannot be null!")
     }
 }
