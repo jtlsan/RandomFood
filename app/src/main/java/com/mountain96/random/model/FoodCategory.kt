@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "foodcategory")
 data class FoodCategory (
-    @PrimaryKey val foodCategoryId: Int,
-    @ColumnInfo(name = "name") var name: String,
+    @PrimaryKey(autoGenerate = true) val foodCategoryId: Int,
+    @ColumnInfo(name = "name", collate = ColumnInfo.RTRIM) var name: String,
     @ColumnInfo(name = "isChecked") var isChecked: Boolean,
     @ColumnInfo(name = "type") var type : ModelType
 )

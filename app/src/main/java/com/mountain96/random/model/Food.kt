@@ -11,15 +11,17 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = FoodCategory::class,
             parentColumns = ["foodCategoryId"],
-            childColumns = ["categoryId"]
+            childColumns = ["categoryId"],
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class Food (
-    @PrimaryKey val uid: Int,
-    @ColumnInfo(name = "name") var name : String,
+    @PrimaryKey(autoGenerate = true) val uid: Int,
+    @ColumnInfo(name = "name", collate = ColumnInfo.RTRIM) var name : String,
     @ColumnInfo(name = "categoryId")var categoryId : Int,
     @ColumnInfo(name = "imageUrl")var image  : String,
     @ColumnInfo(name = "isChecked")var isChecked : Boolean = false,
     @ColumnInfo(name = "isFavorite")var isFavorite : Boolean = false,
-    @ColumnInfo(name = "type")var type : ModelType)
+    @ColumnInfo(name = "type")var type : ModelType,
+    @ColumnInfo(name = "createdByUser")var createdByUser : Boolean = false)

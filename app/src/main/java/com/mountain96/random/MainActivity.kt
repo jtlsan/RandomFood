@@ -9,9 +9,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.Food
+import com.pedro.library.AutoPermissions
+import com.pedro.library.AutoPermissionsListener
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity(), AutoPermissionsListener {
+    companion object {
+        val PERMISSION_REQ_CODE = 101
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         resetFoodCheckbox()
         resetFoodCategory()
+
+        AutoPermissions.Companion.loadAllPermissions(this, PERMISSION_REQ_CODE)
     }
 
     override fun onDestroy() {
@@ -56,5 +62,21 @@ class MainActivity : AppCompatActivity() {
                 db.foodCategoryDao().updateCategory(category)
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        AutoPermissions.Companion.parsePermissions(this, requestCode, permissions, this)
+    }
+
+    override fun onDenied(requestCode: Int, permissions: Array<String>) {
+
+    }
+
+    override fun onGranted(requestCode: Int, permissions: Array<String>) {
     }
 }

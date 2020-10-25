@@ -1,6 +1,10 @@
 package com.mountain96.random.ui.foods
 
+import android.content.ContentResolver
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +27,7 @@ import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_food.view.*
 import kotlinx.android.synthetic.main.item_food.view.cardview_container
 import kotlinx.android.synthetic.main.item_food_add.view.*
+import java.io.InputStream
 
 class FoodsFragment : Fragment() {
     //viewtype for recyclerview
@@ -50,7 +55,6 @@ class FoodsFragment : Fragment() {
 
         categoryAdapter = CategoryRecyclerviewAdapter()
 
-
         view.category_recyclerview.adapter = categoryAdapter
 
         var categoryLayout = LinearLayoutManager(activity)
@@ -62,8 +66,7 @@ class FoodsFragment : Fragment() {
         view.foods_recyclerview.adapter = adapter
         view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
 
-        foodDialog = FoodDialog(childFragmentManager, db!!, categoryAdapter)
-
+        foodDialog = FoodDialog(childFragmentManager, db!!, categoryAdapter, adapter)
 
         return view
     }
@@ -92,17 +95,15 @@ class FoodsFragment : Fragment() {
             val savedCategory = db!!.foodCategoryDao().getAll()
             if (savedCategory.isNotEmpty()) {
                 categoryList.addAll(savedCategory)
-                //db?.clearAllTables()
-                //InitSettings.initCategory(db!!, categoryList)
             } else {
                 InitSettings.initCategory(db!!, categoryList)
             }
         }
 
         fun addCategory(name: String) {
-            FoodCategory(db!!.foodCategoryDao().getAll().size, name, false, ModelType.TYPE_ITEM).let{ category ->
-                categoryList.add(category)
+            FoodCategory(0, name, false, ModelType.TYPE_ITEM).let{ category ->
                 db!!.foodCategoryDao().insertAll(category)
+                categoryList.add(db!!.foodCategoryDao().getAll().last())
             }
         }
 
@@ -144,7 +145,6 @@ class FoodsFragment : Fragment() {
                 }
                 return
             }
-
 
             if (category.isChecked) {
                 itemview.category_button.background = resources.getDrawable(R.drawable.button_category_filled)
@@ -191,7 +191,7 @@ class FoodsFragment : Fragment() {
         }
 
         fun setFoodsByCategory(foodCategoryId: Int) {
-            if (foodCategoryId == 1) {
+            if (foodCategoryId == categoryList.get(1).foodCategoryId) {
                 adapter!!.selectAll()
                 return
             }
@@ -211,15 +211,11 @@ class FoodsFragment : Fragment() {
 
     inner class FoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var foodList : ArrayList<Food> = arrayListOf()
-        //var db: AppDatabase? = null
 
         init {
             val savedFoods = db!!.foodDao().getALL()
             if (savedFoods.isNotEmpty()) {
-                //배포시 내용 삭제하고 주석 없애기
                 foodList.addAll(savedFoods)
-                //db?.clearAllTables()
-                //InitSettings.initFoods(db, foodList)
             } else {
                 InitSettings.initFoods(db, foodList)
             }
@@ -249,6 +245,15 @@ class FoodsFragment : Fragment() {
             val savedFoods = db!!.foodDao().getALL()
             foodList.addAll(savedFoods)
             this.notifyDataSetChanged()
+        }
+
+        fun addFood(name: String, position: Int, imageUrl: String) {
+            var food: Food
+            db!!.foodCategoryDao().getAll().let {
+                food = Food(0, name, it.get(position).foodCategoryId, imageUrl, false, false, ModelType.TYPE_ITEM, true)
+            }
+            db!!.foodDao().insertAll(food)
+            foodList.add(db!!.foodDao().getALL().last())
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -302,19 +307,22 @@ class FoodsFragment : Fragment() {
                 db!!.foodDao().updateFood(food)
             }
             view.textview_foodname.text = foodList.get(position).name
-            Glide.with(requireActivity()).load(foodList.get(position).image).apply(RequestOptions().circleCrop()).into(view.imageview_food)
 
-            if (food.isFavorite) {
+            if (food.createdByUser)
+                Glide.with(requireActivity()).load(Uri.parse(food.image)).apply(RequestOptions().circleCrop()).into(view.imageview_food)
+            else
+                Glide.with(requireActivity()).load(food.image).apply(RequestOptions().circleCrop()).into(view.imageview_food)
+
+            if (food.isFavorite)
                 view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_fill))
-            } else {
+            else
                 view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_bold))
-            }
 
-            if (food.isChecked) {
+            if (food.isChecked)
                 view.checkbox_itemfood.isChecked = true
-            } else {
+            else
                 view.checkbox_itemfood.isChecked = false
-            }
+
         }
     }
 }

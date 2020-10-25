@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = arrayOf(Food::class, FoodCategory::class), version = 6)
+@Database(entities = arrayOf(Food::class, FoodCategory::class), version = 9)
 @TypeConverters(ModelTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun foodDao() : FoodDAO
@@ -23,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "database-food"
-                ).allowMainThreadQueries().addMigrations(MIGRATION_5_6).build()
+                ).allowMainThreadQueries().addMigrations(MIGRATION_8_9).build()
             }
             return instance
         }
@@ -98,6 +98,51 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE foodcategory")
                 database.execSQL("CREATE TABLE foodcategory ("+
                         "foodCategoryId INTEGER PRIMARY KEY NOT NULL, " +
+                        "name TEXT NOT NULL, " +
+                        "isChecked INTEGER NOT NULL, " +
+                        "type INTEGER NOT NULL)")
+            }
+        }
+
+        val MIGRATION_6_7 = object: Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE food")
+                database.execSQL("CREATE TABLE food (" +
+                        "uid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "name TEXT NOT NULL, " +
+                        "categoryId INTEGER NOT NULL, " +
+                        "imageUrl TEXT NOT NULL, " +
+                        "isChecked INTEGER NOT NULL, " +
+                        "isFavorite INTEGER NOT NULL, " +
+                        "type INTEGER NOT NULL, " +
+                        "createdByUser INTEGER NOT NULL, " +
+                        "FOREIGN KEY (categoryId) REFERENCES foodcategory (foodCategoryId) ON DELETE CASCADE)")
+
+                database.execSQL("DROP TABLE foodcategory")
+                database.execSQL("CREATE TABLE foodcategory ("+
+                        "foodCategoryId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "name TEXT NOT NULL, " +
+                        "isChecked INTEGER NOT NULL, " +
+                        "type INTEGER NOT NULL)")
+            }
+        }
+
+        val MIGRATION_7_8 = object: Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE foodcategory")
+                database.execSQL("CREATE TABLE foodcategory ("+
+                        "foodCategoryId INTEGER PRIMARY KEY NOT NULL, " +
+                        "name TEXT NOT NULL, " +
+                        "isChecked INTEGER NOT NULL, " +
+                        "type INTEGER NOT NULL)")
+            }
+        }
+
+        val MIGRATION_8_9 = object: Migration(8, 9) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE foodcategory")
+                database.execSQL("CREATE TABLE foodcategory ("+
+                        "foodCategoryId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                         "name TEXT NOT NULL, " +
                         "isChecked INTEGER NOT NULL, " +
                         "type INTEGER NOT NULL)")

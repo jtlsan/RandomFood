@@ -16,4 +16,7 @@
         <item name="android:textSelectHandle">@color/colorDialogButton</item>
         <item name="android:textCursorDrawable">@color/colorDialogButton</item>
     </style>
+    <style name="DialogCheckBoxTheme">
+        <item name="colorControlActivated">@color/colorDialogButton</item>
+    </style>
 </resources>

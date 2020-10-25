@@ -21,7 +21,7 @@ class CategoryAddDialogFragment(var listener: NoticeDialogListener) : DialogFrag
 
             builder.setView(itemView)
                 .setPositiveButton(R.string.add_button, DialogInterface.OnClickListener { dialog, id ->
-                    listener.onDialogPositiveClick(this, itemView.textCategoryName.text.toString(), DialogType.TYPE_CATEGORY)
+                    listener.onDialogPositiveClick(this, itemView.textCategoryName.text.toString())
                 })
                 .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {dialog, id ->
                     getDialog()?.cancel()
