@@ -254,7 +254,11 @@ class FavoriteFragment : Fragment(){
 
             }
             view.textview_foodname.text = foodList.get(position).name
-            Glide.with(requireActivity()).load(foodList.get(position).image).apply(RequestOptions().circleCrop()).into(view.imageview_food)
+
+            if(food.image.isEmpty())
+                Glide.with(requireActivity()).load(resources.getString(R.string.empty_food)).apply(RequestOptions().circleCrop()).into(view.imageview_food)
+            else
+                Glide.with(requireActivity()).load(food.image).apply(RequestOptions().circleCrop()).into(view.imageview_food)
 
             if (food.isFavorite) {
                 view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_fill))
