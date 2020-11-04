@@ -1,33 +1,22 @@
 package com.mountain96.random.ui.foods
 
-import android.content.ContentResolver
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.mountain96.random.R
 import com.mountain96.random.model.*
-import com.mountain96.random.ui.foods.dialog.CategoryAddDialogFragment
 import com.mountain96.random.ui.foods.dialog.FoodDialog
+import com.mountain96.random.ui.recyclerview.FoodsCategoryRecyclerviewAdapter
+import com.mountain96.random.ui.recyclerview.FoodsRecyclerviewAdapter
 import kotlinx.android.synthetic.main.fragment_foods.view.*
 import kotlinx.android.synthetic.main.item_category.view.*
-import kotlinx.android.synthetic.main.item_food.view.*
-import kotlinx.android.synthetic.main.item_food.view.cardview_container
-import kotlinx.android.synthetic.main.item_food_add.view.*
-import java.io.InputStream
+import kotlinx.android.synthetic.main.item_category.view.category_button
+import kotlinx.android.synthetic.main.item_category_add.view.*
 
 class FoodsFragment : Fragment() {
     //viewtype for recyclerview
@@ -38,7 +27,7 @@ class FoodsFragment : Fragment() {
 
     private lateinit var dashboardViewModel: FoodsViewModel
     var adapter: FoodsRecyclerviewAdapter? = null
-    var categoryAdapter: CategoryRecyclerviewAdapter? = null
+    var categoryAdapter: FoodsCategoryRecyclerviewAdapter? = null
     var db: AppDatabase? = null
     val TAG: String = "FoodsFragment"
     var foodDialog : FoodDialog? = null
@@ -53,20 +42,25 @@ class FoodsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_foods, container, false)
         db = AppDatabase.getInstance(requireContext())
 
-        categoryAdapter = CategoryRecyclerviewAdapter()
 
+        adapter = FoodsRecyclerviewAdapter(db!!, resources, requireActivity())
+        view.foods_recyclerview.adapter = adapter
+        view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
+
+        categoryAdapter = FoodsCategoryRecyclerviewAdapter(db!!, resources, requireActivity(), adapter!!)
         view.category_recyclerview.adapter = categoryAdapter
-
         var categoryLayout = LinearLayoutManager(activity)
         categoryLayout.orientation = RecyclerView.HORIZONTAL
         view.category_recyclerview.layoutManager = categoryLayout
         view.category_recyclerview.isHorizontalScrollBarEnabled = false
 
-        adapter = FoodsRecyclerviewAdapter()
-        view.foods_recyclerview.adapter = adapter
-        view.foods_recyclerview.layoutManager = LinearLayoutManager(activity)
-
         foodDialog = FoodDialog(childFragmentManager, db!!, categoryAdapter, adapter)
+
+        view.foods_recyclerview.setOnClickListener {
+            if (adapter!!.isRemoveStatus) {
+                adapter!!.notifyDataSetChanged()
+            }
+        }
 
         return view
     }
@@ -137,14 +131,15 @@ class FoodsFragment : Fragment() {
             var itemview = holder.itemView
             var category = categoryList.get(position)
 
-            itemview.category_button.text = category.name
-
             if (category.type == ModelType.TYPE_BUTTON) {
-                itemview.category_button.setOnClickListener {
+                itemview.category_add_button.setOnClickListener {
                     foodDialog!!.showCategoryAddDialog()
                 }
                 return
             }
+
+            itemview.category_button.text = category.name
+            itemview.icon_remove_category.visibility=View.INVISIBLE
 
             if (category.isChecked) {
                 itemview.category_button.background = resources.getDrawable(R.drawable.button_category_filled)
@@ -208,9 +203,10 @@ class FoodsFragment : Fragment() {
     }
 
 
-
+/*
     inner class FoodsRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var foodList : ArrayList<Food> = arrayListOf()
+        var isRemoveStatus : Boolean = false
 
         init {
             val savedFoods = db!!.foodDao().getALL()
@@ -283,7 +279,14 @@ class FoodsFragment : Fragment() {
                 return
             }
 
+            view.icon_remove_food.visibility = View.GONE
+
             view.linearlayout_select_area.setOnClickListener(View.OnClickListener {
+                if (isRemoveStatus) {
+                    isRemoveStatus = false
+                    notifyDataSetChanged()
+                    return@OnClickListener
+                }
                 if(view.checkbox_itemfood.isChecked) {
                     food.isChecked = false
                     view.checkbox_itemfood.isChecked = false
@@ -308,10 +311,7 @@ class FoodsFragment : Fragment() {
             }
             view.textview_foodname.text = foodList.get(position).name
 
-            if(food.image.isEmpty())
-                Glide.with(requireActivity()).load(resources.getString(R.string.empty_food)).apply(RequestOptions().circleCrop()).into(view.imageview_food)
-            else
-                    Glide.with(requireActivity()).load(food.image).apply(RequestOptions().circleCrop()).into(view.imageview_food)
+            Glide.with(requireActivity()).load(food.image).apply(RequestOptions().circleCrop()).into(view.imageview_food)
 
             if (food.isFavorite)
                 view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_fill))
@@ -323,6 +323,14 @@ class FoodsFragment : Fragment() {
             else
                 view.checkbox_itemfood.isChecked = false
 
+            view.linearlayout_select_area.setOnLongClickListener {
+                view.icon_remove_food.visibility = View.VISIBLE
+                view.linearlayout_select_area.isEnabled = false
+                isRemoveStatus = true
+                return@setOnLongClickListener true
+            }
         }
     }
+
+ */
 }

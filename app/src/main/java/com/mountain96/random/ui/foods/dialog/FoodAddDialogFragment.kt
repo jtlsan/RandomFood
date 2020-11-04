@@ -55,14 +55,15 @@ class FoodAddDialogFragment(var listener: NoticeDialogListener, val db : AppData
             spinner!!.adapter = spinnerAdapter
             builder.setView(itemview)
                 .setPositiveButton(R.string.add_button, DialogInterface.OnClickListener { dialog, id ->
-                    validateDialog()
-                    var imageUrl : String
-                    if(itemview.DialogCheckBox.isChecked)
-                        imageUrl = ""
-                    else
-                        imageUrl = itemview.textDialogFoodUrl.text.toString()
+                    if (validateDialog()) {
+                        var imageUrl : String
+                        if(itemview.DialogCheckBox.isChecked)
+                            imageUrl = resources.getString(R.string.empty_food)
+                        else
+                            imageUrl = itemview.textDialogFoodUrl.text.toString()
 
-                    listener.onDialogPositiveClick(this, itemview.textFoodName.text.toString(), spinner.selectedItemPosition+2, imageUrl)
+                        listener.onDialogPositiveClick(this, itemview.textFoodName.text.toString(), spinner.selectedItemPosition+2, imageUrl)
+                    }
                 })
                 .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {dialog, id ->
                     getDialog()?.cancel()

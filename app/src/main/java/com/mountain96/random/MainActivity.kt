@@ -1,6 +1,7 @@
 package com.mountain96.random
 
 import android.os.Bundle
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -9,6 +10,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.Food
+import com.mountain96.random.ui.recyclerview.OriginFoodsRecyclerviewAdapter
 import com.pedro.library.AutoPermissions
 import com.pedro.library.AutoPermissionsListener
 
@@ -79,4 +81,5 @@ class MainActivity : AppCompatActivity(), AutoPermissionsListener {
 
     override fun onGranted(requestCode: Int, permissions: Array<String>) {
     }
+
 }

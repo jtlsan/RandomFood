@@ -20,5 +20,8 @@ interface FoodCategoryDAO {
     @Insert
     fun insertAll(vararg category: FoodCategory)
 
+    @Delete
+    fun delete(category: FoodCategory)
+
 
 }
