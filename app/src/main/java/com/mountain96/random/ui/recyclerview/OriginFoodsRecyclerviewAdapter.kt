@@ -78,7 +78,7 @@ open class OriginFoodsRecyclerviewAdapter() : RecyclerView.Adapter<RecyclerView.
             db!!.foodDao().updateFood(food)
         }
         view.textview_foodname.text = foodList.get(position).name
-
+        
         Glide.with(activity).load(food.image).apply(RequestOptions().circleCrop()).into(view.imageview_food)
 
         if (food.isFavorite)

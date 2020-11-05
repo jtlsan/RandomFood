@@ -9,11 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mountain96.random.R
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.FoodCategory
-import com.mountain96.random.model.FoodCategoryWithFood
 import com.mountain96.random.model.ModelType
 import com.mountain96.random.ui.foods.InitSettings
 import com.mountain96.random.ui.foods.dialog.FoodDialog
-import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_category_add.view.*
 
 class FoodsCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
