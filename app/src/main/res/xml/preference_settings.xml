@@ -3,9 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        app:key="resetData"
-        app:title="@string/reset_data"
-        app:summary="@string/reset_data_summary" />
+    <PreferenceCategory
+        app:key="data_category"
+        app:title="Data"
+        app:iconSpaceReserved="false">
+        <Preference
+            app:key="resetData"
+            app:title="@string/reset_data"
+            app:summary="@string/reset_data_summary"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:key="version_category"
+        >
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:title="@string/version"
+            app:enabled="false" />
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

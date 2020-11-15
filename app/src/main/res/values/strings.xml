@@ -28,6 +28,8 @@
     <!--strings for settings-->
     <string name="reset_data">초기 데이터로 되돌리기</string>
     <string name="reset_data_summary">모든 데이터를 처음 앱을 설치했을 때로 되돌립니다.</string>
+    <string name="dialog_reset_data">정말 모든 데이터를 처음으로 되돌리시겠습니까? (이후 복구가 불가능합니다)</string>
+    <string name="version">version 1.0.0</string>
 
 
 </resources>
