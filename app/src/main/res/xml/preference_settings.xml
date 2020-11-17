@@ -21,6 +21,4 @@
             app:title="@string/version"
             app:enabled="false" />
     </PreferenceCategory>
-
-
 </PreferenceScreen>
