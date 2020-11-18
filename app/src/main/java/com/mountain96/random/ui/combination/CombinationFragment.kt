@@ -2,10 +2,7 @@ package com.mountain96.random.ui.combination
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
@@ -17,6 +14,7 @@ import com.mountain96.random.R
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.Food
 import kotlinx.android.synthetic.main.fragment_combination.view.*
+import kotlin.math.absoluteValue
 
 class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -24,6 +22,7 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
     var db: AppDatabase? = null
     var spinner: Spinner? = null
     var foodContainerList: ArrayList<LinearLayout> = arrayListOf()
+    var touched = false
     var TAG : String = "CombinationFragment"
 
     override fun onCreateView(
@@ -41,9 +40,26 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
         db = AppDatabase.getInstance(requireContext())
         countSelectedFoods(rootView)
         foodContainerInit(rootView)
+        var btnThread : RandomButtonThread
 
         spinner!!.onItemSelectedListener = this
+        rootView.button_combine.setOnTouchListener { view, motionEvent ->
 
+            when(motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    rootView.randrom_progressbar.visibility = View.VISIBLE
+                    touched = true
+                    btnThread = RandomButtonThread(motionEvent.downTime, rootView.randrom_progressbar)
+                    btnThread.start()
+                }
+                MotionEvent.ACTION_UP -> {
+                    touched = false
+                    rootView.randrom_progressbar.visibility = View.INVISIBLE
+                    view.performClick()
+                }
+            }
+            return@setOnTouchListener true
+        }
         rootView.button_combine.setOnClickListener {
             pickFood(rootView.spinner_combination_count.selectedItem.toString().toInt())
         }
@@ -93,7 +109,7 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
-        //spinner!!.setSelection(0)
+
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
@@ -163,6 +179,15 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
             view.selected_food_count.text = "0"
         } else {
             view.selected_food_count.text = savedFoods.size.toString()
+        }
+    }
+
+    inner class RandomButtonThread(val pressedTime: Long, val progressBar: ProgressBar) : Thread() {
+
+        override fun run() {
+            while(touched) {
+                progressBar.progress = ((((System.currentTimeMillis() - pressedTime) % 2001) - 1000) / 10).toInt().absoluteValue
+            }
         }
     }
 }

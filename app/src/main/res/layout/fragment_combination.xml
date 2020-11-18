@@ -161,36 +161,16 @@
                 android:textSize="20sp"
                 android:id="@+id/textview_food4"
                 android:layout_marginTop="5dp"/>
-
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/randrom_progressbar"
+            android:layout_gravity="center_horizontal|bottom"
+            android:visibility="invisible"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-
-
-        <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    layout
-            </FrameLayout>
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-            </FrameLayout>
-        </LinearLayout>
-        -->
     </FrameLayout>
     <Button
         android:layout_margin="10dp"
