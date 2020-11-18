@@ -1,8 +1,10 @@
 package com.mountain96.random.ui.combination
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.*
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
@@ -24,6 +26,8 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
     var foodContainerList: ArrayList<LinearLayout> = arrayListOf()
     var touched = false
     var TAG : String = "CombinationFragment"
+    var progress : Int? = null
+    var handler : Handler? = null
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -33,7 +37,7 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
         notificationsViewModel =
                 ViewModelProviders.of(this).get(CombinationViewModel::class.java)
         val rootView = inflater.inflate(R.layout.fragment_combination, container, false)
-
+        handler = Handler(requireActivity().mainLooper)
         spinner = rootView!!.spinner_combination_count
         var spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, resources.getStringArray(R.array.combination_count))
         spinner!!.adapter = spinnerAdapter
@@ -55,6 +59,7 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 MotionEvent.ACTION_UP -> {
                     touched = false
                     rootView.randrom_progressbar.visibility = View.INVISIBLE
+                    progress = rootView.randrom_progressbar.progress
                     view.performClick()
                 }
             }
@@ -76,16 +81,54 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
             Toast.makeText(requireContext(), "선택한 음식의 숫자가 충분하지 않습니다.", Toast.LENGTH_LONG).show()
             return
         }
-        for(i in 0 until (targetCount)) {
-            var randomNum = 0
-            while(randomNum == 0 || randomNum == selectedList.size+1) {
-                randomNum = (Math.random() * (selectedList.size+1)).toInt()
+        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.food)
+        val animation2 = AnimationUtils.loadAnimation(requireContext(), R.anim.food2)
+
+        val runnable = object : Runnable {
+            override fun run() {
+                var rotateList = arrayListOf<Food>()
+                rotateList.addAll(selectedList)
+                for(i in 0 until (targetCount)) {
+                    var randomNum = 0
+                    while(randomNum == 0 || randomNum == rotateList.size+1) {
+                        randomNum = (Math.random() * (rotateList.size+1)).toInt()
+                    }
+                    val food = rotateList.get(randomNum-1)
+                    loadFoodToView(food, i)
+                    //foodContainerList.get(i).startAnimation(animation)
+                    rotateList.remove(food)
+                }
             }
-            val food = selectedList.get(randomNum-1)
-            loadFoodToView(food, i)
-            selectedList.remove(food)
         }
+        val speed = arrayOf(50, 100, 200, 400)
+        val count = arrayOf(progress!!/5 + 1, progress!!/10 + 1, progress!!/10 + 1, progress!!/20 + 1)
+        for(j in 0 until count[0]) {
+            handler!!.postDelayed(runnable, (speed[0] * j).toLong())
+        }
+        for(j in 0 until count[1]) {
+            handler!!.postDelayed(runnable,
+                (speed[1] * j).toLong() +
+                    (speed[0] * count[0]).toLong())
+        }
+        for(j in 0 until count[2]) {
+            handler!!.postDelayed(runnable,
+                (speed[2] * j).toLong() +
+                    (speed[0] * count[0]).toLong() +
+                    (speed[1] * count[1]).toLong())
+        }
+        for(j in 0 until count[3]) {
+            handler!!.postDelayed(runnable, (speed[3] * j).toLong() +
+                    (speed[0] * count[0]).toLong() +
+                    (speed[1] * count[1]).toLong() +
+                    (speed[2] * count[2]).toLong())
+        }
+
+
     }
+
+
+
+
 
     fun loadFoodToView(food: Food, position: Int) {
         when(position) {
@@ -189,5 +232,13 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 progressBar.progress = ((((System.currentTimeMillis() - pressedTime) % 2001) - 1000) / 10).toInt().absoluteValue
             }
         }
+    }
+
+    inner class RouletteThread(val progressBar: ProgressBar) : Thread() {
+
+        override fun run() {
+
+        }
+
     }
 }
