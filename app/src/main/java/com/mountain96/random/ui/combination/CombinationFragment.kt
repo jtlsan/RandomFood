@@ -1,5 +1,6 @@
 package com.mountain96.random.ui.combination
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.mountain96.random.MainActivity
 import com.mountain96.random.R
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.Food
@@ -28,6 +30,7 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
     var TAG : String = "CombinationFragment"
     var progress : Int? = null
     var handler : Handler? = null
+    var mainActivity : MainActivity? = null
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -45,6 +48,7 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
         countSelectedFoods(rootView)
         foodContainerInit(rootView)
         var btnThread : RandomButtonThread
+
 
         spinner!!.onItemSelectedListener = this
         rootView.button_combine.setOnTouchListener { view, motionEvent ->
@@ -81,10 +85,14 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
             Toast.makeText(requireContext(), "선택한 음식의 숫자가 충분하지 않습니다.", Toast.LENGTH_LONG).show()
             return
         }
-        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.food)
-        val animation2 = AnimationUtils.loadAnimation(requireContext(), R.anim.food2)
 
-        val runnable = object : Runnable {
+        val speed = arrayOf(50, 100, 200, 400)
+        val count = arrayOf(progress!!/5 + 1, progress!!/10 + 1, progress!!/15 + 1, progress!!/20 + 1)
+        var totalTime = 0
+        for(i in 0 until speed.size) {
+            totalTime += speed[i] * count[i]
+        }
+        val rotaterRnnable = object : Runnable {
             override fun run() {
                 var rotateList = arrayListOf<Food>()
                 rotateList.addAll(selectedList)
@@ -100,35 +108,40 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 }
             }
         }
-        val speed = arrayOf(50, 100, 200, 400)
-        val count = arrayOf(progress!!/5 + 1, progress!!/10 + 1, progress!!/10 + 1, progress!!/20 + 1)
+
+        val navLockRunnalbe = object : Runnable {
+            override fun run() {
+                (activity as MainActivity).setNavViewEnabled(true)
+            }
+        }
+        (activity as MainActivity).setNavViewEnabled(false)
         for(j in 0 until count[0]) {
-            handler!!.postDelayed(runnable, (speed[0] * j).toLong())
+            handler!!.postDelayed(rotaterRnnable, (speed[0] * j).toLong())
         }
         for(j in 0 until count[1]) {
-            handler!!.postDelayed(runnable,
+            handler!!.postDelayed(rotaterRnnable,
                 (speed[1] * j).toLong() +
                     (speed[0] * count[0]).toLong())
         }
         for(j in 0 until count[2]) {
-            handler!!.postDelayed(runnable,
+            handler!!.postDelayed(rotaterRnnable,
                 (speed[2] * j).toLong() +
                     (speed[0] * count[0]).toLong() +
                     (speed[1] * count[1]).toLong())
         }
         for(j in 0 until count[3]) {
-            handler!!.postDelayed(runnable, (speed[3] * j).toLong() +
+            handler!!.postDelayed(rotaterRnnable, (speed[3] * j).toLong() +
                     (speed[0] * count[0]).toLong() +
                     (speed[1] * count[1]).toLong() +
                     (speed[2] * count[2]).toLong())
         }
-
-
+        handler!!.postDelayed(navLockRunnalbe, totalTime.toLong())
     }
 
-
-
-
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
 
     fun loadFoodToView(food: Food, position: Int) {
         when(position) {

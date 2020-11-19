@@ -11,4 +11,5 @@
     <color name="colorCategoryAddButton">#ffad33</color>
     <color name="colorFoodAddButton">#D9D4CA</color>
     <color name="colorDialogButton">#ffad33</color>
+    <color name="colorProgressBar">#ffad33</color>
 </resources>
