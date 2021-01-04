@@ -10,6 +10,17 @@ class InitSettings {
     //categoryId : 0 = 추가버튼, 1 = 모두, 2 .. 그외
     companion object {
         public fun initFoods(db: AppDatabase?, foodList: ArrayList<Food>) {
+            val addList : ArrayList<FoodCategory> = arrayListOf()
+            addList.add(FoodCategory(0, "", false, ModelType.TYPE_BUTTON))
+            addList.add(FoodCategory(0, "모두", true, ModelType.TYPE_ITEM))
+            addList.add(FoodCategory(0, "한식", false, ModelType.TYPE_ITEM))
+            addList.add(FoodCategory(0, "중식", false, ModelType.TYPE_ITEM))
+            addList.add(FoodCategory(0, "일식", false, ModelType.TYPE_ITEM))
+            addList.add(FoodCategory(0, "양식", false, ModelType.TYPE_ITEM))
+            addList.add(FoodCategory(0, "그외", false, ModelType.TYPE_ITEM))
+            for(category in addList)
+                db?.foodCategoryDao()?.insertAll(category)
+
             val categoryList = db!!.foodCategoryDao().getAll()
             foodList.add(Food(0, "", categoryList.get(0).foodCategoryId, "", false, false, ModelType.TYPE_BUTTON))
             foodList.add(Food(0, "후라이드치킨", categoryList.get(2).foodCategoryId, "https://cdn.pixabay.com/photo/2017/03/20/09/08/food-2158543_960_720.jpg", false, false, ModelType.TYPE_ITEM))
@@ -22,9 +33,11 @@ class InitSettings {
             foodList.add(Food(0, "피자", categoryList.get(5).foodCategoryId, "https://cdn.pixabay.com/photo/2017/01/22/19/20/pizza-2000615_960_720.jpg", false, false, ModelType.TYPE_ITEM))
             foodList.add(Food(0, "쌀국수", categoryList.get(6).foodCategoryId, "https://cdn.pixabay.com/photo/2016/02/18/06/42/vietnam-1206576_960_720.jpg", false, false, ModelType.TYPE_ITEM))
 
+
             for(food in foodList) {
                 db?.foodDao()?.insertAll(food)
             }
+
         }
 
         public fun initCategory(db: AppDatabase, categoryList: ArrayList<FoodCategory>) {

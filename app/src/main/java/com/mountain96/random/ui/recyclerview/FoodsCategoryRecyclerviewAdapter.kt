@@ -30,11 +30,8 @@ class FoodsCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
         this.adapter = adapter
 
         val savedCategory = db!!.foodCategoryDao().getAll()
-        if (savedCategory.isNotEmpty()) {
-            categoryList.addAll(savedCategory)
-        } else {
-            InitSettings.initCategory(db!!, categoryList)
-        }
+        categoryList.addAll(savedCategory)
+
         selectCategoryAll()
     }
 

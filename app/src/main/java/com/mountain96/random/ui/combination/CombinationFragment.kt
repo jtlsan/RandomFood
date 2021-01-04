@@ -246,12 +246,4 @@ class CombinationFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
     }
-
-    inner class RouletteThread(val progressBar: ProgressBar) : Thread() {
-
-        override fun run() {
-
-        }
-
-    }
 }
