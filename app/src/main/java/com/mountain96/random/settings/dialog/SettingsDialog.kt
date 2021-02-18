@@ -16,7 +16,6 @@ class SettingsDialog(val fragmentManager: FragmentManager) : NoticeDialogListene
     override fun onDialogPositiveClick(dialog: DialogFragment) {
         val db = AppDatabase.getInstance(dialog.requireContext())
         db!!.clearAllTables()
-        InitSettings.initCategory(db, arrayListOf())
         InitSettings.initFoods(db, arrayListOf())
     }
 

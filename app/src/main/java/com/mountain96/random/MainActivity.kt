@@ -1,8 +1,14 @@
 package com.mountain96.random
 
+import android.Manifest
+import android.content.DialogInterface
+import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -12,10 +18,8 @@ import com.mountain96.random.model.Food
 import com.pedro.library.AutoPermissions
 import com.pedro.library.AutoPermissionsListener
 
-class MainActivity : AppCompatActivity(), AutoPermissionsListener, NavViewLocker {
-    companion object {
-        val PERMISSION_REQ_CODE = 101
-    }
+class MainActivity : AppCompatActivity(), NavViewLocker {
+    private val PERMISSION_CODE = 151
     var navView : BottomNavigationView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +34,11 @@ class MainActivity : AppCompatActivity(), AutoPermissionsListener, NavViewLocker
         navView!!.setupWithNavController(navController)
         resetFoodCheckbox()
         resetFoodCategory()
+        
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_CODE)
+        }
 
-        AutoPermissions.Companion.loadAllPermissions(this, PERMISSION_REQ_CODE)
     }
 
     override fun setNavViewEnabled(enabled: Boolean) {
@@ -89,14 +96,25 @@ class MainActivity : AppCompatActivity(), AutoPermissionsListener, NavViewLocker
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        AutoPermissions.Companion.parsePermissions(this, requestCode, permissions, this)
+        if (requestCode == PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                AlertDialog.Builder(this).apply {
+                    setTitle("접근 권한 없음")
+                    setMessage("카메라 권한이 없을 시 앱을 사용하실 수 없습니다.")
+
+                    setOnCancelListener {
+                        moveTaskToBack(true)
+                        finish()
+                        android.os.Process.killProcess(android.os.Process.myPid())
+                    }
+                    setPositiveButton("확인", DialogInterface.OnClickListener {dialogInterface, i ->
+                        moveTaskToBack(true)
+                        finish()
+                        android.os.Process.killProcess(android.os.Process.myPid())
+                    })
+                    show()
+                }
+            }
+        }
     }
-
-    override fun onDenied(requestCode: Int, permissions: Array<String>) {
-
-    }
-
-    override fun onGranted(requestCode: Int, permissions: Array<String>) {
-    }
-
 }

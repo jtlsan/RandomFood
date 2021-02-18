@@ -85,7 +85,7 @@ class FavoriteFragment : Fragment(){
             if (savedCategory.isNotEmpty()) {
                 categoryList.addAll(savedCategory)
             } else {
-                InitSettings.initCategory(db!!, categoryList)
+                //InitSettings.initCategory(db!!, categoryList)
             }
             //remove add button
             categoryList.removeAt(0)
