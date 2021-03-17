@@ -15,24 +15,20 @@ import com.mountain96.random.ui.foods.dialog.FoodDialog
 import kotlinx.android.synthetic.main.item_food.view.*
 import kotlinx.android.synthetic.main.item_food_add.view.*
 
-class FoodsRecyclerviewAdapter() : OriginFoodsRecyclerviewAdapter() {
-    lateinit override var db : AppDatabase
+class FoodsRecyclerviewAdapter : FoodsRecyclerView {
+    //lateinit override var db : AppDatabase
     lateinit var foodDialog: FoodDialog
-    lateinit override var activity: FragmentActivity
-    lateinit override var resources: Resources
-    override var foodList : ArrayList<Food> = arrayListOf()
+    //lateinit override var activity: FragmentActivity
+    //lateinit override var resources: Resources
+    override lateinit var foodList : ArrayList<Food>
     override var isRemoveStatus : Boolean = false
 
-    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity): this() {
-        this.db = db
-        this.resources = resources
-        this.activity = activity
+    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity): super(db, resources, activity)
 
-        //** 모델 변경시에만
-        //db?.clearAllTables()
-        //**
 
+    override fun loadFoodList() {
         val savedFoods = db!!.foodDao().getALL()
+        foodList = arrayListOf()
         if (savedFoods.isNotEmpty()) {
             foodList.addAll(savedFoods)
         } else {
@@ -48,7 +44,7 @@ class FoodsRecyclerviewAdapter() : OriginFoodsRecyclerviewAdapter() {
         super.getItemViewType(position)
         var result: Int
         when(foodList.get(position).type) {
-            ModelType.TYPE_BUTTON -> result = 0
+            ModelType.TYPE_ADD_BUTTON -> result = 0
             ModelType.TYPE_ITEM -> result = 1
         }
         return result
@@ -98,9 +94,9 @@ class FoodsRecyclerviewAdapter() : OriginFoodsRecyclerviewAdapter() {
         var view = holder.itemView
         var food = foodList.get(position)
 
-        if (food.type == ModelType.TYPE_BUTTON) {
+        if (food.type == ModelType.TYPE_ADD_BUTTON) {
             view.button_add_food.setOnClickListener {
-                foodDialog!!.showFoodAddDialog()
+                foodDialog.showFoodAddDialog()
             }
             return
         }
@@ -113,4 +109,5 @@ class FoodsRecyclerviewAdapter() : OriginFoodsRecyclerviewAdapter() {
             return@setOnLongClickListener true
         }
     }
+
 }

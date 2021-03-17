@@ -95,7 +95,7 @@ class FavoriteFragment : Fragment(){
             super.getItemViewType(position)
             var result : Int
             when(categoryList.get(position).type) {
-                ModelType.TYPE_BUTTON -> result = 0
+                ModelType.TYPE_ADD_BUTTON -> result = 0
                 ModelType.TYPE_ITEM -> result = 1
             }
             return result
@@ -123,7 +123,7 @@ class FavoriteFragment : Fragment(){
 
             itemview.category_button.text = category.name
 
-            if (category.type == ModelType.TYPE_BUTTON) {
+            if (category.type == ModelType.TYPE_ADD_BUTTON) {
 
                 return
             }

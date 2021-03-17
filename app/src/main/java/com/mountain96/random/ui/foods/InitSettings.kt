@@ -11,7 +11,7 @@ class InitSettings {
     companion object {
         public fun initFoods(db: AppDatabase?, foodList: ArrayList<Food>) {
             val addList : ArrayList<FoodCategory> = arrayListOf()
-            addList.add(FoodCategory(0, "", false, ModelType.TYPE_BUTTON))
+            addList.add(FoodCategory(0, "", false, ModelType.TYPE_ADD_BUTTON))
             addList.add(FoodCategory(0, "모두", true, ModelType.TYPE_ITEM))
             addList.add(FoodCategory(0, "한식", false, ModelType.TYPE_ITEM))
             addList.add(FoodCategory(0, "중식", false, ModelType.TYPE_ITEM))
@@ -22,7 +22,7 @@ class InitSettings {
                 db?.foodCategoryDao()?.insertAll(category)
 
             val categoryList = db!!.foodCategoryDao().getAll()
-            foodList.add(Food(0, "", categoryList.get(0).foodCategoryId, "", false, false, ModelType.TYPE_BUTTON))
+            foodList.add(Food(0, "", categoryList.get(0).foodCategoryId, "", false, false, ModelType.TYPE_ADD_BUTTON))
             foodList.add(Food(0, "후라이드치킨", categoryList.get(2).foodCategoryId, "https://cdn.pixabay.com/photo/2017/03/20/09/08/food-2158543_960_720.jpg", false, false, ModelType.TYPE_ITEM))
             foodList.add(Food(0, "양념치킨", categoryList.get(2).foodCategoryId, "https://cdn.pixabay.com/photo/2015/02/19/08/26/chicken-641881_960_720.jpg", false, false, ModelType.TYPE_ITEM))
             foodList.add(Food(0, "족발", categoryList.get(2).foodCategoryId, "https://cdn.pixabay.com/photo/2015/10/22/14/13/food-1001256_960_720.jpg", false, false, ModelType.TYPE_ITEM))
@@ -38,20 +38,6 @@ class InitSettings {
                 db?.foodDao()?.insertAll(food)
             }
 
-        }
-
-        public fun initCategory(db: AppDatabase, categoryList: ArrayList<FoodCategory>) {
-            categoryList.add(FoodCategory(0, "", false, ModelType.TYPE_BUTTON))
-            categoryList.add(FoodCategory(0, "모두", true, ModelType.TYPE_ITEM))
-            categoryList.add(FoodCategory(0, "한식", false, ModelType.TYPE_ITEM))
-            categoryList.add(FoodCategory(0, "중식", false, ModelType.TYPE_ITEM))
-            categoryList.add(FoodCategory(0, "일식", false, ModelType.TYPE_ITEM))
-            categoryList.add(FoodCategory(0, "양식", false, ModelType.TYPE_ITEM))
-            categoryList.add(FoodCategory(0, "그외", false, ModelType.TYPE_ITEM))
-
-            for(category in categoryList) {
-                db?.foodCategoryDao().insertAll(category)
-            }
         }
     }
 }

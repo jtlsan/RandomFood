@@ -10,19 +10,18 @@ import com.mountain96.random.model.Food
 import com.mountain96.random.ui.foods.dialog.FoodDialog
 import kotlinx.android.synthetic.main.item_food.view.*
 
-class FavoriteFoodsRecyclerviewAdapter() : OriginFoodsRecyclerviewAdapter() {
-    lateinit override var db : AppDatabase
+class FavoriteFoodsRecyclerviewAdapter : FoodsRecyclerView {
+    //lateinit override var db : AppDatabase
     lateinit var foodDialog: FoodDialog
-    lateinit override var activity: FragmentActivity
-    lateinit override var resources: Resources
-    override var foodList : ArrayList<Food> = arrayListOf()
+    //lateinit override var activity: FragmentActivity
+    //lateinit override var resources: Resources
+    override lateinit var foodList : ArrayList<Food>
     override var isRemoveStatus : Boolean = false
 
-    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity): this() {
-        this.db = db
-        this.resources = resources
-        this.activity = activity
+    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity): super(db, resources, activity)
 
+    override fun loadFoodList() {
+        foodList = arrayListOf()
         val savedFoods = db!!.foodDao().getAllFavorites()
         foodList.addAll(savedFoods)
     }
@@ -41,10 +40,6 @@ class FavoriteFoodsRecyclerviewAdapter() : OriginFoodsRecyclerviewAdapter() {
         val savedFoods = db!!.foodDao().getAllFavorites()
         foodList.addAll(savedFoods)
         this.notifyDataSetChanged()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return super.onCreateViewHolder(parent, viewType)
     }
 
     inner class CustomViewHolder(view : View) : RecyclerView.ViewHolder(view)

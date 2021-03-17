@@ -18,12 +18,12 @@ class FoodsCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
     lateinit override var db : AppDatabase
     lateinit override var activity: FragmentActivity
     lateinit override var resources: Resources
-    lateinit override var adapter: OriginFoodsRecyclerviewAdapter
+    lateinit override var adapter: FoodsRecyclerView
     lateinit var foodDialog: FoodDialog
     override var isRemoveStatus = false
     override var categoryList : ArrayList<FoodCategory> = arrayListOf()
 
-    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: OriginFoodsRecyclerviewAdapter): this() {
+    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: FoodsRecyclerView): this() {
         this.db = db
         this.resources = resources
         this.activity = activity
@@ -50,7 +50,7 @@ class FoodsCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
         super.getItemViewType(position)
         var result : Int
         when(categoryList.get(position).type) {
-            ModelType.TYPE_BUTTON -> result = 0
+            ModelType.TYPE_ADD_BUTTON -> result = 0
             ModelType.TYPE_ITEM -> result = 1
         }
         return result
@@ -72,7 +72,7 @@ class FoodsCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
         var itemview = holder.itemView
         var category = categoryList.get(position)
 
-        if (category.type == ModelType.TYPE_BUTTON) {
+        if (category.type == ModelType.TYPE_ADD_BUTTON) {
             itemview.category_add_button.setOnClickListener {
                 foodDialog!!.showCategoryAddDialog()
             }

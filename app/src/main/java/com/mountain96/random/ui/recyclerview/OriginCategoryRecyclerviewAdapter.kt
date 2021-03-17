@@ -16,15 +16,17 @@ open class OriginCategoryRecyclerviewAdapter() : RecyclerView.Adapter<RecyclerVi
     lateinit open var db : AppDatabase
     lateinit open var activity: FragmentActivity
     lateinit open var resources: Resources
-    lateinit open var adapter: OriginFoodsRecyclerviewAdapter
+    lateinit open var adapter: FoodsRecyclerView
+    lateinit open var glide: FoodGlide
     open var isRemoveStatus = false
     open var categoryList : ArrayList<FoodCategory> = arrayListOf()
 
-    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: OriginFoodsRecyclerviewAdapter): this() {
+    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: FoodsRecyclerView): this() {
         this.db = db
         this.resources = resources
         this.activity = activity
         this.adapter = adapter
+        this.glide = FoodGlide(activity)
 
         val savedFoods = db!!.foodCategoryDao().getAll()
         categoryList.addAll(savedFoods)

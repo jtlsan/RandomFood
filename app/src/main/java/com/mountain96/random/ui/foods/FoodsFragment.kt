@@ -98,7 +98,7 @@ class FoodsFragment : Fragment() {
             super.getItemViewType(position)
             var result : Int
             when(categoryList.get(position).type) {
-                ModelType.TYPE_BUTTON -> result = 0
+                ModelType.TYPE_ADD_BUTTON -> result = 0
                 ModelType.TYPE_ITEM -> result = 1
             }
             return result
@@ -124,7 +124,7 @@ class FoodsFragment : Fragment() {
             var itemview = holder.itemView
             var category = categoryList.get(position)
 
-            if (category.type == ModelType.TYPE_BUTTON) {
+            if (category.type == ModelType.TYPE_ADD_BUTTON) {
                 itemview.category_add_button.setOnClickListener {
                     foodDialog!!.showCategoryAddDialog()
                 }

@@ -10,11 +10,11 @@ class FavoriteCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter(
     lateinit override var db : AppDatabase
     lateinit override var activity: FragmentActivity
     lateinit override var resources: Resources
-    lateinit override var adapter: OriginFoodsRecyclerviewAdapter
+    lateinit override var adapter: FoodsRecyclerView
     override var isRemoveStatus = false
     override var categoryList : ArrayList<FoodCategory> = arrayListOf()
 
-    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: OriginFoodsRecyclerviewAdapter): this() {
+    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: FoodsRecyclerView): this() {
         this.db = db
         this.resources = resources
         this.activity = activity

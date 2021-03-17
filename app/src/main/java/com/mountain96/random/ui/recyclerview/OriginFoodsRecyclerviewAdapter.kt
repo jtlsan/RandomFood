@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.mountain96.random.R
 import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.Food
@@ -19,11 +17,13 @@ open class OriginFoodsRecyclerviewAdapter() : RecyclerView.Adapter<RecyclerView.
     lateinit open var resources: Resources
     open var isRemoveStatus = false
     open var foodList : ArrayList<Food> = arrayListOf()
+    lateinit open var glide : FoodGlide
 
     constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity): this() {
         this.db = db
         this.resources = resources
         this.activity = activity
+        this.glide = FoodGlide(activity)
 
         val savedFoods = db!!.foodDao().getALL()
         foodList.addAll(savedFoods)
@@ -78,8 +78,9 @@ open class OriginFoodsRecyclerviewAdapter() : RecyclerView.Adapter<RecyclerView.
             db!!.foodDao().updateFood(food)
         }
         view.textview_foodname.text = foodList.get(position).name
-        
-        Glide.with(activity).load(food.image).apply(RequestOptions().circleCrop()).into(view.imageview_food)
+
+
+        glide.loadImageTo(food.image, view.imageview_food)
 
         if (food.isFavorite)
             view.icon_favorite_mark.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite_mark_fill))
