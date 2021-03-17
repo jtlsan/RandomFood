@@ -15,19 +15,15 @@ import com.mountain96.random.ui.foods.dialog.FoodDialog
 import kotlinx.android.synthetic.main.item_food.view.*
 import kotlinx.android.synthetic.main.item_food_add.view.*
 
-class FoodsRecyclerviewAdapter : FoodsRecyclerView {
-    //lateinit override var db : AppDatabase
+class FoodsRecyclerviewAdapter(db: AppDatabase, resources: Resources, activity: FragmentActivity) :
+    FoodsRecyclerView(db, resources, activity) {
     lateinit var foodDialog: FoodDialog
-    //lateinit override var activity: FragmentActivity
-    //lateinit override var resources: Resources
     override lateinit var foodList : ArrayList<Food>
     override var isRemoveStatus : Boolean = false
 
-    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity): super(db, resources, activity)
-
 
     override fun loadFoodList() {
-        val savedFoods = db!!.foodDao().getALL()
+        val savedFoods = db.foodDao().getALL()
         foodList = arrayListOf()
         if (savedFoods.isNotEmpty()) {
             foodList.addAll(savedFoods)
@@ -42,7 +38,7 @@ class FoodsRecyclerviewAdapter : FoodsRecyclerView {
 
     override fun getItemViewType(position: Int): Int {
         super.getItemViewType(position)
-        var result: Int
+        val result: Int
         when(foodList.get(position).type) {
             ModelType.TYPE_ADD_BUTTON -> result = 0
             ModelType.TYPE_ITEM -> result = 1
@@ -60,18 +56,18 @@ class FoodsRecyclerviewAdapter : FoodsRecyclerView {
 
     override fun selectAll() {
         foodList.clear()
-        val savedFoods = db!!.foodDao().getALL()
+        val savedFoods = db.foodDao().getALL()
         foodList.addAll(savedFoods)
         this.notifyDataSetChanged()
     }
 
     fun addFood(name: String, position: Int, imageUrl: String) {
         var food: Food
-        db!!.foodCategoryDao().getAll().let {
+        db.foodCategoryDao().getAll().let {
             food = Food(0, name, it.get(position).foodCategoryId, imageUrl, false, false, ModelType.TYPE_ITEM, true)
         }
-        db!!.foodDao().insertAll(food)
-        foodList.add(db!!.foodDao().getALL().last())
+        db.foodDao().insertAll(food)
+        foodList.add(db.foodDao().getALL().last())
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -86,13 +82,9 @@ class FoodsRecyclerviewAdapter : FoodsRecyclerView {
     inner class FoodAddViewHolder(view: View) : RecyclerView.ViewHolder(view)
     inner class FoodViewHolder(view : View) : RecyclerView.ViewHolder(view)
 
-    override fun getItemCount(): Int {
-        return foodList.size
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        var view = holder.itemView
-        var food = foodList.get(position)
+        val view = holder.itemView
+        val food = foodList.get(position)
 
         if (food.type == ModelType.TYPE_ADD_BUTTON) {
             view.button_add_food.setOnClickListener {
@@ -101,13 +93,5 @@ class FoodsRecyclerviewAdapter : FoodsRecyclerView {
             return
         }
         super.onBindViewHolder(holder, position)
-
-        view.linearlayout_select_area.setOnLongClickListener {
-            view.icon_remove_food.visibility = View.VISIBLE
-            view.linearlayout_select_area.isEnabled = false
-            isRemoveStatus = true
-            return@setOnLongClickListener true
-        }
     }
-
 }

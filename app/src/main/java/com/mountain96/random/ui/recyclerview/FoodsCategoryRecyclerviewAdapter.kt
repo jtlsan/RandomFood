@@ -14,31 +14,23 @@ import com.mountain96.random.ui.foods.InitSettings
 import com.mountain96.random.ui.foods.dialog.FoodDialog
 import kotlinx.android.synthetic.main.item_category_add.view.*
 
-class FoodsCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
-    lateinit override var db : AppDatabase
-    lateinit override var activity: FragmentActivity
-    lateinit override var resources: Resources
-    lateinit override var adapter: FoodsRecyclerView
+class FoodsCategoryRecyclerviewAdapter(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: FoodsRecyclerView) :
+    CategoryRecyclerview(db, resources, activity, adapter) {
     lateinit var foodDialog: FoodDialog
     override var isRemoveStatus = false
-    override var categoryList : ArrayList<FoodCategory> = arrayListOf()
+    override lateinit var categoryList : ArrayList<FoodCategory>
 
-    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: FoodsRecyclerView): this() {
-        this.db = db
-        this.resources = resources
-        this.activity = activity
-        this.adapter = adapter
-
-        val savedCategory = db!!.foodCategoryDao().getAll()
+    override fun loadCategoryList() {
+        val savedCategory = db.foodCategoryDao().getAll()
+        categoryList = arrayListOf()
         categoryList.addAll(savedCategory)
-
         selectCategoryAll()
     }
 
     fun addCategory(name: String) {
         FoodCategory(0, name, false, ModelType.TYPE_ITEM).let{ category ->
-            db!!.foodCategoryDao().insertAll(category)
-            categoryList.add(db!!.foodCategoryDao().getAll().last())
+            db.foodCategoryDao().insertAll(category)
+            categoryList.add(db.foodCategoryDao().getAll().last())
         }
     }
 
@@ -48,7 +40,7 @@ class FoodsCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
 
     override fun getItemViewType(position: Int): Int {
         super.getItemViewType(position)
-        var result : Int
+        val result : Int
         when(categoryList.get(position).type) {
             ModelType.TYPE_ADD_BUTTON -> result = 0
             ModelType.TYPE_ITEM -> result = 1
@@ -69,12 +61,12 @@ class FoodsCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
     inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        var itemview = holder.itemView
-        var category = categoryList.get(position)
+        val itemview = holder.itemView
+        val category = categoryList.get(position)
 
         if (category.type == ModelType.TYPE_ADD_BUTTON) {
             itemview.category_add_button.setOnClickListener {
-                foodDialog!!.showCategoryAddDialog()
+                foodDialog.showCategoryAddDialog()
             }
             return
         }

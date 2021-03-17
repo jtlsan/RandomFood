@@ -6,27 +6,15 @@ import com.mountain96.random.model.AppDatabase
 import com.mountain96.random.model.FoodCategory
 import com.mountain96.random.ui.foods.InitSettings
 
-class FavoriteCategoryRecyclerviewAdapter() : OriginCategoryRecyclerviewAdapter() {
-    lateinit override var db : AppDatabase
-    lateinit override var activity: FragmentActivity
-    lateinit override var resources: Resources
-    lateinit override var adapter: FoodsRecyclerView
+class FavoriteCategoryRecyclerviewAdapter(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: FoodsRecyclerView) :
+    CategoryRecyclerview(db, resources, activity, adapter) {
     override var isRemoveStatus = false
-    override var categoryList : ArrayList<FoodCategory> = arrayListOf()
+    override lateinit var categoryList : ArrayList<FoodCategory>
 
-    constructor(db: AppDatabase, resources: Resources, activity: FragmentActivity, adapter: FoodsRecyclerView): this() {
-        this.db = db
-        this.resources = resources
-        this.activity = activity
-        this.adapter = adapter
-
-        val savedCategory = db!!.foodCategoryDao().getAll()
-        if (savedCategory.isNotEmpty()) {
-            categoryList.addAll(savedCategory)
-        } else {
-            //InitSettings.initCategory(db!!, categoryList)
-        }
-        //remove add button
+    override fun loadCategoryList() {
+        val savedCategory = db.foodCategoryDao().getAll()
+        categoryList = arrayListOf()
+        categoryList.addAll(savedCategory)
         categoryList.removeAt(0)
         selectCategoryAll()
     }
